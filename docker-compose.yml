@@ -1,15 +1,15 @@
 services:
 
   # Nombre de tu servicio (ej. 'mi-api-python')
-  api:
+  api-chatgpt:
     # 1. Indicamos a Docker Compose que debe construir la imagen 
     # usando el Dockerfile en el directorio actual.
     build: 
-      context: ./api
+      context: ./backend
       dockerfile: Dockerfile
     
     # 2. Mapeamos el puerto interno del contenedor (8000) al puerto 
-    # de tu máquina local (8000) para poder acceder a la API.
+    # de tu máquina local (8000) para poder acceder a la backend.
     ports:
       - "8000:8000"
       
@@ -18,10 +18,10 @@ services:
     # si cambias tu código Python, se reflejará automáticamente
     # sin tener que reconstruir la imagen.
     volumes:
-      - ./api:/api
+      - ./backend:/api-chatgpt
 
     env_file:
-      - ./api/.env
+      - ./backend/.env
       
 
     networks:
@@ -53,7 +53,34 @@ services:
     restart: always
     networks:
       - scraper-net
+  db-backend:
+    # 1. Indicamos a Docker Compose que debe construir la imagen 
+    # usando el Dockerfile en el directorio actual.
+    build: 
+      context: ./backend/db
+      dockerfile: Dockerfile
+    
+    # 2. Mapeamos el puerto interno del contenedor (8000) al puerto 
+    # de tu máquina local (8000) para poder acceder a la API.
+    ports:
+      - "8001:8001"
       
+    # 3. Mapeamos el código local al contenedor. 
+    # Esto es ÚTIL PARA EL DESARROLLO (hot-reloading): 
+    # si cambias tu código Python, se reflejará automáticamente
+    # sin tener que reconstruir la imagen.
+    volumes:
+      - ./backend/db:/backend-db
+
+    # env_file:
+    #   - ./backend/db/.env
+      
+
+    networks:
+      - scraper-net
+    
+    # 5. Comando para reiniciar si falla (opcional)
+    restart: always
 
 networks:
   scraper-net:

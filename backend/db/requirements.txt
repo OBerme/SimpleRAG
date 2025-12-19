@@ -1,0 +1,6 @@
+streamlit
+uvicorn
+pymongo
+requests
+pydantic
+fastapi[standard]
