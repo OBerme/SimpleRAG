@@ -1,5 +1,0 @@
-google-genai
-playwright
-fastapi[standard]
-crawl4ai
-openai
