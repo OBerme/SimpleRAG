@@ -1,0 +1,60 @@
+services:
+
+  # Nombre de tu servicio (ej. 'mi-api-python')
+  api:
+    # 1. Indicamos a Docker Compose que debe construir la imagen 
+    # usando el Dockerfile en el directorio actual.
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    
+    # 2. Mapeamos el puerto interno del contenedor (8000) al puerto 
+    # de tu máquina local (8000) para poder acceder a la API.
+    ports:
+      - "8000:8000"
+      
+    # 3. Mapeamos el código local al contenedor. 
+    # Esto es ÚTIL PARA EL DESARROLLO (hot-reloading): 
+    # si cambias tu código Python, se reflejará automáticamente
+    # sin tener que reconstruir la imagen.
+    volumes:
+      - ./api:/api
+
+    env_file:
+      - ./api/.env
+      
+
+    networks:
+      - scraper-net
+    
+    # 5. Comando para reiniciar si falla (opcional)
+    restart: always
+
+  streamlit-frontend:
+    # 1. Indicamos a Docker Compose que debe construir la imagen 
+    # usando el Dockerfile en el directorio actual.
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    
+    # 2. Mapeamos el puerto interno del contenedor (8000) al puerto 
+    # de tu máquina local (8000) para poder acceder a la API.
+    ports:
+      - "8501:8501"
+      
+    # 3. Mapeamos el código local al contenedor. 
+    # Esto es ÚTIL PARA EL DESARROLLO (hot-reloading): 
+    # si cambias tu código Python, se reflejará automáticamente
+    # sin tener que reconstruir la imagen.
+    volumes:
+      - ./frontend:/app-frontend
+    
+    # 5. Comando para reiniciar si falla (opcional)
+    restart: always
+    networks:
+      - scraper-net
+      
+
+networks:
+  scraper-net:
+    driver: bridge
