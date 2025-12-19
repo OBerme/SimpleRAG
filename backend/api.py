@@ -2,8 +2,8 @@ from fastapi import FastAPI
 
 from fileManager import FileManager
 # from GoogleGemini.googleGeminiFilesUploaderFinal import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-# from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+# from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
 # # from OpenAIChatGPT.APIInterfaceCallableFilesVersion import getResponseUsingFiles
 
 from basicMarkdownAnaliticScraperFromUrls import scarpeMarkdownBasicInfo 
