@@ -2,8 +2,8 @@ from fastapi import FastAPI
 
 from fileManager import FileManager
 # from GoogleGemini.googleGeminiFilesUploaderFinal import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-# from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+# from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
 # # from OpenAIChatGPT.APIInterfaceCallableFilesVersion import getResponseUsingFiles
 
 from basicMarkdownAnaliticScraperFromUrls import scarpeMarkdownBasicInfo 
@@ -77,6 +77,13 @@ async def uploadFiles2API(query):
             
             ##FORMATO DE LA RESPUESTA
             Quiero que como mínimo la respuesta sea de 512 palabras y como máximo sea de 1024 palabras.
+            Y quiero que al final hagas un resumen entre 1 y 3 palabras. Quiero que este resumen me lo separes del otro texto
+            utilizando el siguiente patron: "---------------"
+            Por ejemplo:
+            
+            resumen...
+            ---------------
+            palabra/s...
         """
         
             
@@ -85,6 +92,26 @@ async def uploadFiles2API(query):
     # files = FileManager.recopilar_nombres_markdown(folder_to_save)
     # list_files = [ folder_to_save + '/' + next_file_name for next_file_name in files]
     
+    # list_files = list_files[:3]
+    list_files = FileManager.get_matrix_documents(folder_to_save)
+    print("List files: ", list_files )
+
+    response = await getResponseUsingFiles(list_files, query, instruccion_sistema)
+    FileManager.deleteAllFiles(folder_to_save)
+    # return {"response": response}
+    return {response}
+
+
+
+@app.get("/getSumUpText")
+async def getResponseWithQuery(text):
+    instruccion_sistema = """
+        Eres una persona que resume textos diariamente y sabes como resumir un texto en 1 y 3 palabras.
+        Tu tarea es resumir el texto que te voy a proporcionar.
+    """ + text
+            
+        #Quiero que menciones de que documentos has sacado la información. De los documentos que te he pasado.
+        
     # list_files = list_files[:3]
     list_files = FileManager.get_matrix_documents(folder_to_save)
     print("List files: ", list_files )

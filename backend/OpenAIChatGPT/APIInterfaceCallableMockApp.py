@@ -99,6 +99,9 @@ async def evaluar_documentos(contenido_combinado: str, query: str, instruccion_s
         - Si trabajas con Sistema Red, confirma que la empresa está configurada para MA – Alta Sucesiva y que puedes generar el fichero AFI y enviarlo.
 
         Si necesitas, puedo adaptar estos pasos a tu versión exacta del sistema o aclararte cuál es la ruta exacta en tu interfaz. En ese caso, dime si es una alta individual o masiva y si trabajas con Sistema Red o con otro régimen, y te doy una guía más precisa paso a paso.
+        
+        ---------------
+        Alta trabajadores
     """
 
 

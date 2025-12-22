@@ -1,7 +1,10 @@
 import streamlit as st
 import requests
 from datetime import datetime
-
+# from API.APIParser import get_list_response
+SPLIT_KEY_STR = '---------------'
+def get_list_response(response):
+    return response.split(SPLIT_KEY_STR, 2)
 # --- Configuración de URLs ---
 # URL de tu API original (la que procesa el prompt)
 API_URL = "http://api-chatgpt:8000"
@@ -12,11 +15,11 @@ API_POINT_ENTRY_URL = f"{API_URL}/getResponseWithQuery"
 CONVERSATIONS_API_URL = "http://db-backend:8001"
 
 
-def create_new_conversation(first_query):
+def create_new_conversation(first_query, title):
     """Crea la conversación en DB usando el primer mensaje como referencia para el título."""
     try:
         # Usamos los primeros 20 caracteres del prompt como título para que sea descriptivo
-        title = f"{first_query[:20]}..." if len(first_query) > 20 else first_query
+        # title = f"{first_query[:20]}..." if len(first_query) > 20 else first_query
         response = requests.post(
             f"{CONVERSATIONS_API_URL}/conversations/create",
             json={"title": title, "user_id": "default_user"}
@@ -34,10 +37,6 @@ def get_conversations():
     except:
         return []
     
-def appendNewConversation():
-    with st.sidebar:
-        st.button(f"prompt")
-
 def save_message_to_db(conversation_id, role, content):
     if not conversation_id: return
     try:
@@ -55,6 +54,7 @@ def load_messages_from_db(conversation_id):
     except: return []
     return []
 
+
 # --- Gestión del Estado de la Sesión ---
 
 # current_conversation_id será None al inicio (Estado de "Chat Nuevo")
@@ -67,11 +67,13 @@ if "messages" not in st.session_state:
 # --- Sidebar ---
 
 with st.sidebar:
-    st.title('🤖💬 Chatbot RAG')
+    st.title('🤖💬 Chatbot a3responde')
     
     # Al pulsar "Nuevo Chat", simplemente reseteamos el estado a None (puntero a chat nuevo)
-    if st.button("➕ Nuevo chat", use_container_width=True):
+    if st.button("➕🚀 Nueva conversacion", use_container_width=True):
+        
         st.session_state.current_conversation_id = None
+        st.session_state.title = None
         st.session_state.messages = []
         st.rerun()
 
@@ -80,23 +82,12 @@ with st.sidebar:
     for chat in get_conversations():
         if st.button(f"💬 {chat['title']}", key=chat["id"], use_container_width=True):
             st.session_state.current_conversation_id = chat["id"]
+            st.session_state.title = chat['title']
             st.session_state.messages = load_messages_from_db(chat["id"])
             st.rerun()
 
-# --- Lógica Principal ---
 
-# Título dinámico
-if st.session_state.current_conversation_id is None:
-    st.title("🚀 Nueva Conversación")
-    st.info("Escribe algo para comenzar. El chat se guardará automáticamente.")
-else:
-    st.title("💬 Chat Activo")
-
-# Mostrar mensajes existentes
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
+        
 # Input del usuario
 if prompt := st.chat_input("¿En qué puedo ayudarte?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -104,41 +95,63 @@ if prompt := st.chat_input("¿En qué puedo ayudarte?"):
     with st.chat_message("user"):
         st.markdown(prompt)
     
-    # 1. Si es un chat nuevo (ID es None), lo creamos AHORA
-    if st.session_state.current_conversation_id is None:
-        new_id = create_new_conversation(prompt)
-        if new_id:
-            st.session_state.current_conversation_id = new_id
-        else:
-            st.error("No se pudo iniciar la conversación en la DB. El mensaje no se guardará.")
-
     # 2. Lógica de visualización y guardado
     st.session_state.messages.append({"role": "user", "content": prompt})
-    # appendNewConversation()
     
-    
-    # 4. GUARDAR en DB (si tenemos ID)
-    if st.session_state.current_conversation_id:
-        save_message_to_db(st.session_state.current_conversation_id, "user", prompt)
-    
-
     # 3. Respuesta del Asistente
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
         try:
             response = requests.get(API_POINT_ENTRY_URL, params={"query": prompt})
             data = response.json()
-            answer = data.get("response", "Sin respuesta.")
+            
+            
+            list_response = data.get("response", "Sin respuesta.")
+            response_parsed = get_list_response(list_response[0])
+            
+            answer = response_parsed[0]
             
             # Limpieza de formato si viene en lista
             if isinstance(answer, list):
                 answer = answer[0] if answer else "Lista vacía."
-
+            
             message_placeholder.markdown(answer)
+            
+            title = response_parsed[1]
+            if st.session_state.current_conversation_id is None:
+                
+                new_id = create_new_conversation(prompt, title)
+                if new_id:
+                    st.session_state.current_conversation_id = new_id
+                else:
+                    st.error("No se pudo iniciar la conversación en la DB. El mensaje no se guardará.")
+                    
+            # 4. GUARDAR en DB (si tenemos ID)
+            if st.session_state.current_conversation_id: 
+                save_message_to_db(st.session_state.current_conversation_id, "user", prompt)
             
             # 4. Guardado final
             st.session_state.messages.append({"role": "assistant", "content": answer})
             save_message_to_db(st.session_state.current_conversation_id, "assistant", answer)
             
+            message_saved = "Se ha guardado como: " + title
+            
+            st.write(message_saved)
+            
+            
+            
         except Exception as e:
             message_placeholder.error(f"Error de conexión: {e}")
+else:
+    if "title" in st.session_state and st.session_state.title is not None:
+            st.title(st.session_state.title)
+    else:
+        st.title("🚀 Nueva Conversación")
+
+
+
+# Mostrar mensajes existentes
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+    
