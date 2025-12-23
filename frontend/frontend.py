@@ -1,21 +1,10 @@
 import streamlit as st
 import requests
+import traceback  
 from datetime import datetime
 # from API.APIParser import get_list_response
-SPLIT_KEY_STR = '---------------'
-SPLIT_LINKS_STR = '@@@@@@@@@@@@@@@'
-SPLIT_LINKS_SEPARATOR = ','
 
-def get_list_response(response):
-    split_sum_up = response.split(SPLIT_KEY_STR, 2)
-    sum_up = split_sum_up[1]
-    split_links = sum_up.split(SPLIT_LINKS_STR,2)
-    
-    return [ split_sum_up[0], split_links[0], split_links[1]]
-
-
-def get_list_links(links):
-    return links.split(SPLIT_LINKS_SEPARATOR, 2)
+DEBUG_MODE = True
 
 # --- Configuración de URLs ---
 # URL de tu API original (la que procesa el prompt)
@@ -98,81 +87,85 @@ with st.sidebar:
             st.session_state.messages = load_messages_from_db(chat["id"])
             st.rerun()
 
-
-        
-# Input del usuario
-if prompt := st.chat_input("¿En qué puedo ayudarte?"):
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    
-    with st.chat_message("user"):
-        st.markdown(prompt)
-    
-    # 2. Lógica de visualización y guardado
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    
-    # 3. Respuesta del Asistente
-    with st.chat_message("assistant"):
-        message_placeholder = st.empty()
-        try:
-            response = requests.get(API_POINT_ENTRY_URL, params={"query": prompt})
-            data = response.json()
-            
-            list_response = data.get("response", "Sin respuesta.")
-            response_parsed = get_list_response(list_response[0])
-            
-            answer = response_parsed[0]
-            
-            # Limpieza de formato si viene en lista
-            if isinstance(answer, list):
-                answer = answer[0] if answer else "Lista vacía."
-            
-            title =  response_parsed[1]
-            
-            links =  response_parsed[2]
-            list_links = get_list_links(links)
-            
-            ## Escribimos dónde se ha guardado la conversación
-            answer += "\n" "Se ha guardado la conversación como: " + title
-            
-            answer += "\n" + "Links de utilidad: "
-            for next_link in list_links:    
-                answer += "\n" + next_link
-                
-            
-            
-            
-            message_placeholder.markdown(answer)
-            if st.session_state.current_conversation_id is None:
-                
-                new_id = create_new_conversation(prompt, title)
-                if new_id:
-                    st.session_state.current_conversation_id = new_id
-                else:
-                    st.error("No se pudo iniciar la conversación en la DB. El mensaje no se guardará.")
-                    
-            # 4. GUARDAR en DB (si tenemos ID)
-            if st.session_state.current_conversation_id: 
-                save_message_to_db(st.session_state.current_conversation_id, "user", prompt)
-            
-            # 4. Guardado final
-            st.session_state.messages.append({"role": "assistant", "content": answer})
-            save_message_to_db(st.session_state.current_conversation_id, "assistant", answer)
-            
-            
-            
-            
-        except Exception as e:
-            message_placeholder.error(f"Error de conexión: {e}")
-else:
-    if "title" in st.session_state and st.session_state.title is not None:
-            st.title(st.session_state.title)
-    else:
-        st.title("🚀 Nueva Conversación")
-
-
+if "title" in st.session_state and st.session_state.title is not None:
+    st.title(st.session_state.title)
 
 # Mostrar mensajes existentes
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
+        
+# Input del usuario
+if prompt := st.chat_input("¿En qué puedo ayudarte?"):
+    
+    # Añadimos y mostramos el mensaje del usuario inmediatamente
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    
+    # Respuesta del Asistente
+    with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        try:
+            response = requests.get(API_POINT_ENTRY_URL, params={"query": prompt})
+            
+            data = (response.json())['response']
+            
+            print("Data: ", data)
+            answer = data['answer'] # Aprovechamos para limpiar los \n
+            title = data['chat_title']
+            links = data['links']
+            
+            # answer= "esto seria la respuesta del texto"
+            # links=["link 1", "link 2", "link 3"]
+            # title="nombre del chat"
+            
+            st.session_state.messages.append({"role": "assistant", "content": response})
+            
+            
+            # # Formatear la respuesta final
+            full_answer = f"{answer}\n\n**Enlaces de interés:**\n\n"
+            for link in links:
+                full_answer += f"{link}\n"
+            
+            message_placeholder.markdown(full_answer)
+
+            # --- GESTIÓN DE BASE DE DATOS ---
+            if st.session_state.current_conversation_id is None:
+                # Si es nuevo, creamos la conversación con el título de la IA
+                new_id = create_new_conversation(prompt, title)
+                if new_id:
+                    st.session_state.current_conversation_id = new_id
+                    st.session_state.title = title
+                    
+            
+            # Guardar en memoria y DB
+            save_message_to_db(st.session_state.current_conversation_id, "user", prompt)
+            save_message_to_db(st.session_state.current_conversation_id, "assistant", full_answer)
+            st.session_state.messages.append({"role": "assistant", "content": full_answer})
+            
+            # Forzamos rerun para que el título de la página se actualice arriba
+            st.rerun()
+            
+        except Exception as e:
+            if DEBUG_MODE:
+                # Capturamos el error completo
+                error_detallado = traceback.format_exc()
+                
+                # Lo imprimimos en la consola/terminal para que tú lo veas
+                print(error_detallado)
+                
+                # En Streamlit, puedes mostrarlo en un desplegable para que no ensucie la UI
+                with st.expander("Ver detalles del error"):
+                    st.code(error_detallado)
+                
+                message_placeholder.error(f"Error: {e}")
+                
+            else:
+                message_placeholder.error(f"Error: {e}")
+# else:
+    # if "title" not in st.session_state or st.session_state.title is None:
+    #     st.title("🚀 Nueva Conversación")
+
+
     

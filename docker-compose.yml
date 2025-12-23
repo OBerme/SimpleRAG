@@ -6,7 +6,8 @@ services:
     # usando el Dockerfile en el directorio actual.
     build: 
       context: ./backend
-      dockerfile: Dockerfile
+      # dockerfile: Dockerfile
+      dockerfile: DockerfileFast
     
     # 2. Mapeamos el puerto interno del contenedor (8000) al puerto 
     # de tu máquina local (8000) para poder acceder a la backend.
