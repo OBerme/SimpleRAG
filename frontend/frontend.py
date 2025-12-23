@@ -3,8 +3,20 @@ import requests
 from datetime import datetime
 # from API.APIParser import get_list_response
 SPLIT_KEY_STR = '---------------'
+SPLIT_LINKS_STR = '@@@@@@@@@@@@@@@'
+SPLIT_LINKS_SEPARATOR = ','
+
 def get_list_response(response):
-    return response.split(SPLIT_KEY_STR, 2)
+    split_sum_up = response.split(SPLIT_KEY_STR, 2)
+    sum_up = split_sum_up[1]
+    split_links = sum_up.split(SPLIT_LINKS_STR,2)
+    
+    return [ split_sum_up[0], split_links[0], split_links[1]]
+
+
+def get_list_links(links):
+    return links.split(SPLIT_LINKS_SEPARATOR, 2)
+
 # --- Configuración de URLs ---
 # URL de tu API original (la que procesa el prompt)
 API_URL = "http://api-chatgpt:8000"
@@ -105,7 +117,6 @@ if prompt := st.chat_input("¿En qué puedo ayudarte?"):
             response = requests.get(API_POINT_ENTRY_URL, params={"query": prompt})
             data = response.json()
             
-            
             list_response = data.get("response", "Sin respuesta.")
             response_parsed = get_list_response(list_response[0])
             
@@ -115,9 +126,22 @@ if prompt := st.chat_input("¿En qué puedo ayudarte?"):
             if isinstance(answer, list):
                 answer = answer[0] if answer else "Lista vacía."
             
-            message_placeholder.markdown(answer)
+            title =  response_parsed[1]
             
-            title = response_parsed[1]
+            links =  response_parsed[2]
+            list_links = get_list_links(links)
+            
+            ## Escribimos dónde se ha guardado la conversación
+            answer += "\n" "Se ha guardado la conversación como: " + title
+            
+            answer += "\n" + "Links de utilidad: "
+            for next_link in list_links:    
+                answer += "\n" + next_link
+                
+            
+            
+            
+            message_placeholder.markdown(answer)
             if st.session_state.current_conversation_id is None:
                 
                 new_id = create_new_conversation(prompt, title)
@@ -134,9 +158,6 @@ if prompt := st.chat_input("¿En qué puedo ayudarte?"):
             st.session_state.messages.append({"role": "assistant", "content": answer})
             save_message_to_db(st.session_state.current_conversation_id, "assistant", answer)
             
-            message_saved = "Se ha guardado como: " + title
-            
-            st.write(message_saved)
             
             
             

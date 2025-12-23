@@ -2,8 +2,8 @@ from fastapi import FastAPI
 
 from fileManager import FileManager
 # from GoogleGemini.googleGeminiFilesUploaderFinal import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-# from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+# from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
 # # from OpenAIChatGPT.APIInterfaceCallableFilesVersion import getResponseUsingFiles
 
 from basicMarkdownAnaliticScraperFromUrls import scarpeMarkdownBasicInfo 
@@ -32,8 +32,13 @@ folder_to_save = './documentos_guardados'
 @app.get("/getResponseWithQuery")
 async def getResponseWithQuery(query):
     await getLinksFromQuery(query)
-    await getFilesFromUrlsFile()
-    response = await uploadFiles2API(query)
+    links = await getListLinksFile()
+    links = links[:3]
+    
+    print("Links: ", links)
+    
+    await getFilesFromUrlsFile(links)
+    response = await uploadFiles2API(query, links)
     return {"response":response}
 
 #@app.get("/getLinksFromQuery")
@@ -41,28 +46,32 @@ async def getLinksFromQuery(query):
     await get_links_to_folder(query, output_file)
     return {"status": "Done"}
 
-#@app.get("/getFilesFromUrlsFile")
-async def getFilesFromUrlsFile():
+async def getListLinksFile():
     json_urls_path = "./" +  output_file + "/extracted_urls.json"
+    urls = []
     with open(json_urls_path, 'r') as file:
-        urls = json.load(file)[:5] # conseguimos solo los 5 links mas relevantes
-        await scarpeMarkdownBasicInfo(urls,folder_to_save)
+        urls = json.load(file) # conseguimos solo los 5 links mas relevantes
+    return urls
+
+#@app.get("/getFilesFromUrlsFile")
+async def getFilesFromUrlsFile(urls):
+    await scarpeMarkdownBasicInfo(urls,folder_to_save)
     return {"status": "Done"}
 
 
 #@app.get("/uploadFiles2API")
-async def uploadFiles2API(query):
+async def uploadFiles2API(query, links):
     instruccion_sistema = """
             Eres un analista de documentos experimentado.
             Tu tarea es estudiar los documentos proporcionados para informarte.
             Si los documentos no contienen información suficiente para responder, utiliza tu conocimiento general
             del tema para dar una respuesta completa, pero indica al final qué tipo de documentos se necesitan.
             
-            #¿CÓMO DEBE DE SER LA RESPUESTA?
-            ##ESTILO DE LA RESPUESTA
+            # ¿CÓMO DEBE DE SER LA RESPUESTA?
+            ## ESTILO DE LA RESPUESTA
             Tiene que ser lo más natural posible.
             
-            ##COSAS QUE SE PUEDEN QUITAR DE LA SALIDA
+            ## COSAS QUE SE PUEDEN QUITAR DE LA SALIDA
             No hace falta que incluyas una breve introducción al usuario
             o un saludo o algo que no añada valor a la respuesta.
             Simplemente quiero que me des la respuesta directa al grano, sin datos superfluos.
@@ -75,15 +84,23 @@ async def uploadFiles2API(query):
             ahí si que tienes que explicar por que el usu
             ario te lo pregunta.
             
-            ##FORMATO DE LA RESPUESTA
+            ## FORMATO DE LA RESPUESTA
             Quiero que como mínimo la respuesta sea de 512 palabras y como máximo sea de 1024 palabras.
-            Y quiero que al final hagas un resumen entre 1 y 3 palabras. Quiero que este resumen me lo separes del otro texto
-            utilizando el siguiente patron: "---------------"
-            Por ejemplo:
             
-            resumen...
+            ### RESUMEN DE LA RESPUESTA
+            Quiero que al final hagas un resumen entre 1 y 3 palabras.
+            Separame el resumen, entre 1 y 3 palabras del texto principal con el siguiente patrón :"---------------"
+            
+            
+            ### LINKS DE CADA DOCUMENTO
+            Y quiero que me incluyas los links de los documentos que se ajusten mejor y que has utilizado para responder al usuario.
+            
+            La respuesta final tiene que ser muy parecida a este ejemplo:
+            texto principal...
             ---------------
-            palabra/s...
+            resumen en 1-3 palabras...
+            @@@@@@@@@@@@@@@
+            link 1, link 2, link 3
         """
         
             
@@ -96,7 +113,7 @@ async def uploadFiles2API(query):
     list_files = FileManager.get_matrix_documents(folder_to_save)
     print("List files: ", list_files )
 
-    response = await getResponseUsingFiles(list_files, query, instruccion_sistema)
+    response = await getResponseUsingFiles(list_files, query, instruccion_sistema, links)
     FileManager.deleteAllFiles(folder_to_save)
     # return {"response": response}
     return {response}

@@ -17,7 +17,7 @@ DEBUG_MODE=True
 # La clave API se cargará automáticamente de la variable de entorno OPENAI_API_KEY
 # (Asegúrate de configurar esta variable en tu .env o Docker Compose)
 
-def obtener_contenidos_y_combinar(lista_archivos_contenidos_matrix):
+def obtener_contenidos_y_combinar(lista_archivos_contenidos_matrix, links):
     """
     Combina el contenido de los archivos en un solo string, limitando a los primeros 5.
     (La lógica es idéntica a la versión de Gemini).
@@ -25,6 +25,7 @@ def obtener_contenidos_y_combinar(lista_archivos_contenidos_matrix):
     
     # max_list_matrix_files = 
     contenido_total = ""
+    i = 0
     for next_contenido_fichero in lista_archivos_contenidos_matrix:
         nombre_archivo = next_contenido_fichero[0]
         try:
@@ -32,6 +33,9 @@ def obtener_contenidos_y_combinar(lista_archivos_contenidos_matrix):
             contenido_total += f"--- INICIO DOCUMENTO: {nombre_archivo} ---\n"
             contenido_total += next_contenido_fichero[1] + "\n"
             contenido_total += f"--- FIN DOCUMENTO: {nombre_archivo} ---\n\n"
+            contenido_total += f"--- LINK: {links[i]} ---\n\n"
+            
+            i+=1
         except Exception:
             # En este contexto, si el contenido ya está en la matriz, esto rara vez se usa
             print(f"Advertencia: Error al procesar el contenido de: {nombre_archivo}")
@@ -79,7 +83,7 @@ async def evaluar_documentos(contenido_combinado: str, query: str, instruccion_s
         )
         
 
-        # # 4. Extraer el Contenido
+        # # # 4. Extraer el Contenido
         # # La respuesta de OpenAI es diferente; el texto está en response.choices[0].message.content
         contenido = response.output_text
         
@@ -89,6 +93,7 @@ async def evaluar_documentos(contenido_combinado: str, query: str, instruccion_s
         # print("---------------------------------------")
         
         return contenido
+        
         
 
     # except APIError as e:
@@ -105,9 +110,9 @@ async def evaluar_documentos(contenido_combinado: str, query: str, instruccion_s
 # query: should be query of the user
 # instruccion_sistema: should be the instructions for the AI that it should keep in mind.
 #Post: it will return an string with the response of the AI, or an string with the iternal error.
-async def getResponseUsingFiles(list_matrix_files, query, instruccion_sistema):
-    contenido_para_gemini = obtener_contenidos_y_combinar(list_matrix_files)
-    
+async def getResponseUsingFiles(list_matrix_files, query, instruccion_sistema, links):
+    contenido_para_gemini = obtener_contenidos_y_combinar(list_matrix_files, links)
+    print("Contenido ",contenido_para_gemini )
     if contenido_para_gemini.strip():
         # Llamamos a la función asíncrona y la esperamos (await)
         return await evaluar_documentos(contenido_para_gemini, query, instruccion_sistema)

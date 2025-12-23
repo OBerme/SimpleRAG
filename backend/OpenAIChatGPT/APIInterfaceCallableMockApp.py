@@ -42,66 +42,48 @@ async def evaluar_documentos(contenido_combinado: str, query: str, instruccion_s
     Llama a la API de OpenAI para evaluar los documentos y generar la respuesta.
     """
     return """
-    Para dar de alta un trabajador en la Seguridad Social, tienes tres maneras posibles y cada una requiere un conjunto de datos y pasos. Elige la que mejor se ajuste a tu caso (alta individual o masiva).
+         Para darte de alta en la Seguridad Social hay que decidir primero de qué tipo de alta se trata, ya que los procedimientos difieren según sea autónomo, régimen general (MA – alta) o alta por Sistema Red. A continuación te resumo las opciones más habituales y los pasos prácticos para cada una, para que puedas escoger la que corresponde a tu caso.    
 
-        1) Alta individual desde la ficha del trabajador (Sistema Red)
-        - Abre la ficha del trabajador y accede a la opción para enviarla a la Seguridad Social:
-        - Ir a la ruta correspondiente y selecciona la acción MA – Alta Sucesiva.
-        - Pulsa Preparar para enviar y, si procede, modifica la fecha de alta y otros datos que aparezcan.
-        - Confirma con Aceptar. En ese momento la acción queda preparada y se acumula para tramitarla desde la sección de Afiliaciones.
-        - Después ve a Nómina/Comunic@ción/Afiliaciones y usa Nueva Acción (si fuera necesario) para completar el alta.
-        - En la ventana selecciona el trabajador o la empresa, la acción “MA – Alta Sucesiva (Régimen General y Agrario)” y la fecha del alta. Si corresponde, indica un indicativo de subrogación.
-        - Pulsa Aceptar. Verás que la acción queda en la lista de acciones preparadas.
-        - Selecciona los trabajadores a los que quieres dar de alta y pulsa Generar para crear el fichero de alta (AFI) y/o enviarlo.
-        - Pasos finales y control:
-        - En la lista de acciones, utiliza la opción Generar para producir el fichero AFI. En este punto, podrás enviar la remesa o procesarla en el sistema correspondiente (Siltra) si aplica.
-        - En la ficha del trabajador, en Controles, podrás ver la fecha en que se generó la acción y, una vez enviada, la fecha de envío en el campo correspondiente.
-        - Datos clave que suelen requerirse:
-        - Código de convenio de la empresa (debería estar disponible; si no, puedes seleccionar un convenio de la lista de convenios de la empresa).
-        - CNO (ocupación): se llena automáticamente desde la información de contratación/listado de contrato de la ficha; si no, deberá informarse manualmente.
-        - Fecha del alta y fecha de efectos, y cualquier otro dato que la plataforma pida (centro, centro de coste, jornada, etc., según configuración).
-        - Observaciones útiles:
-        - Si no existe el convenio en la empresa, al seleccionar un código manual podría aparecer un mensaje, pero el fichero se generará de todos modos.
-        - Si vas a hacer altas de varios trabajadores, puedes usar la vía de Excel para agilizar el proceso (ver apartado masivo).
+1) Alta de un trabajador autónomo (trabajador por cuenta propia)
 
-        2) Alta mediante Afiliaciones – Nueva Acción
-        - Ve a Nómina/Comunic@ción/Afiliaciones y elige Nueva Acción.
-        - Selecciona el trabajador o la empresa y la acción MA – Alta Sucesiva (Régimen General y Agrario); indica la fecha del alta y, si aplica, el indicativo de subrogación.
-        - Pulsa Aceptar para preparar la acción.
-        - En la siguiente pantalla, elige Sustituir la lista de afiliaciones o Agregar afiliaciones a la lista para incluir a los trabajadores deseados.
-        - Recuerda que, al entrar en la pantalla de afiliaciones, verás una lista de movimientos pendientes de generar de todas las empresas del mes en curso y del mes anterior; si necesitas, acota la búsqueda.
-        - Cuando tengas la lista deseada, selecciona a los trabajadores y pulsa Generar. Se creará el fichero AFI del movimiento MA.
-        - Opcional: desde el área de Afiliaciones también podrás Exportar/Importar para gestionar masivamente y luego generar la remesa para enviar.
-        - Datos clave:
-        - Código de convenio debe estar informado (si el convenio ya está asignado al trabajador, se mostrará automáticamente; si no, puedes elegir uno de la empresa).
-        - CNO se rellenará en función de la ocupación indicada en la ficha.
-        - Beneficio de esta vía: facilita el alta de varios trabajadores en un único proceso, manteniendo un control claro de qué acciones están preparadas y pendientes de enviar.
+- Crear la ficha del trabajador: en la ficha nueva, asigna las características necesarias para un autónomo. En el apartado de Cotización deja en blanco los campos correspondientes al Grupo de Tarifa y al Epígrafe de Accidentes, ya que estos autónomos no cotizan al Régimen General.
 
-        3) Alta masiva vía formato Excel (Format 202 – MA – Alta sucesiva)
-        - En Nómina/Comunic@ción/Afiliaciones, usa Importar/Exportar y elige Exportar el formato 202 – MA – Alta sucesiva (Régimen General y Agrario).
-        - Completa el Excel con los datos requeridos: empresa/centro/trabajadores, fecha de alta, jornada, y otros campos obligatorios indicados; recuerda que, si el trabajador tiene una jornada parcial o reducida, debes completar los campos correspondientes.
-        - Guarda el Excel y usa Importar para cargarlo en el sistema.
-        - Selecciona los trabajadores importados y pulsa Generar para crear el fichero AFI correspondiente.
-        - Si todo está correcto, la generación te confirmará que el alta está listo para enviar. Posteriormente podrás enviar la remesa a la Seguridad Social (a través del flujo habitual de Siltra si corresponde).
-        - Datos clave:
-        - Debes indicar el código de convenio para cada trabajador; si ya existe en la empresa, se rellenará automáticamente; si no, tendrás que asignarlo manualmente.
-        - El campo CNO (ocupación) se toma de la ficha; si hay discrepancias, asegúrate de ajustar la ocupación en el listado de contrato.      
-        - Ventajas:
-        - Ideal cuando se da de alta a varios trabajadores en poco tiempo, manteniendo consistencia entre datos y movimientos.
-        - Consideraciones finales:
-        - Tras generar, en la ficha de cada trabajador podrás ver la fecha en que se generó la acción (Afiliación System Red Enviado) y en el área de Controles de la ficha, la trazabilidad del alta.
-        - En todos los casos, el ficheros AFI se crean en la ruta correspondiente del sistema y luego puedes procesarlos o enviarlos según tu flujo de trabajo.
+- Informar un concepto salarial si aplica: si vas a informar la Seguridad Social del autónomo mediante un concepto salarial, en la ruta Tablas/Conceptos/Conceptos Salariales utiliza la opción Previsión IRPF y asigna el código correspondiente para que el sistema tenga en cuenta la previsión de IRPF (por ejemplo, el código 457). Si en tu empresa el concepto se aplica como retribución en especie, en los indicadores del concepto (para el código 457) marca el indicador Cpto. Especies y especifica si es a cargo de la Empresa o del Trabajador. Pulsa Aceptar para guardar.
 
-        Qué necesitas para empezar (resumen)
-        - Datos del trabajador o de los trabajadores: nombre, fecha de alta, centro de trabajo, código de convenio, ocupación (CNO) y, si se aplica, la jornada.
-        - Acceso a las rutas de nómina y afiliaciones (con permisos para crear acciones MA – Alta Sucesiva).
-        - Conocimientos sobre si es un alta individual o masiva (para seleccionar la vía adecuada: ficha, acción nueva o Excel).
-        - Si trabajas con Sistema Red, confirma que la empresa está configurada para MA – Alta Sucesiva y que puedes generar el fichero AFI y enviarlo.
+- Consideraciones finales: este proceso es directo y se centra en adaptar la ficha para que el sistema entienda que no hay cotización al Régimen General y que, si corresponde, se gestione la previsión de IRPF. Si necesitas tratar al autónomo como partícipe de una nómina específica (p. ej., remuneración en especie), puedes usar los indicadores indicados.       
 
-        Si necesitas, puedo adaptar estos pasos a tu versión exacta del sistema o aclararte cuál es la ruta exacta en tu interfaz. En ese caso, dime si es una alta individual o masiva y si trabajas con Sistema Red o con otro régimen, y te doy una guía más precisa paso a paso.
-        
-        ---------------
-        Alta trabajadores
+2) Alta de un trabajador en MA – Alta (Régimen General y Agrario)
+
+- Campos obligatorios: en los movimientos de alta informa el código de convenio oficial aplicable al trabajador. Si el convenio de la empresa ya está registrado, se rellenará automáticamente; si no, tendrás que seleccionar un convenio de la lista o introducirlo manualmente. Ten en cuenta que si informas manualmente un convenio que no existe, el sistema puede mostrar el aviso “No existe el convenio en la empresa”, pero el fichero se generará correctamente.
+
+- CNO y contratación: el campo CNO se rellenará automáticamente a partir de la información de CNO (ocupación) en Contratación/Listado contrato de la ficha del trabajador.
+
+- Preparar movimiento MA desde la ficha: al crear la ficha o al modificar la fecha de alta y guardar, la aplicación mostrará un aviso para preparar el movimiento; al pulsar Aceptar, el movimiento quedará en una “bolsa” de acciones preparadas para enviar.
+
+- Nueva Acción de Afiliaciones: ve a Nómina / Comunic@ción / Afiliaciones y selecciona Nueva Acción. Elige al trabajador (o a la empresa), la acción MA – Alta Sucesiva (Régimen General y Agrario), la fecha y el indicador de subrogación si corresponde. Pulsa Aceptar para preparar la acción. Luego, utiliza Sustituir la lista de afiliaciones o Agregar afiliaciones a la lista para seleccionar los trabajadores y generar los ficheros de afiliación.
+
+- Enfoque para altas masivas: si necesitas dar de alta a varios trabajadores a la vez, utiliza el formato Excel para MA – Alta sucesiva (Régimen General y Agrario): Exporta el formato, completa los datos de alta, importa el archivo y genera las altas. Esto facilita la gestión masiva.
+
+- Verificación y envío: recuerda que al entrar en Afiliaciones, por defecto se mostrará la relación de movimientos pendientes; puedes acotar la búsqueda. Una vez lista la selección, genera el alta y, si aplica, genera un fichero AFI para enviar a través de Siltra o del canal que uses en tu empresa. En la ficha del trabajador podrás ver la fecha de envío en Controles (Afiliación Sistema Red Enviado) y, cuando corresponda, podrás proceder a los procesos de envío.
+
+- Consejos prácticos: asegúrate de disponer del código de convenio correcto y de que la fecha de alta esté alineada con la contratación real. Si tu empresa tiene variantes de convenios o subrogaciones, revisa esos campos para evitar inconsistencias en las nóminas y en la Seguridad Social.
+
+3) Alta de un trabajador por Sistema Red (Siltra)
+
+- Opción desde la ficha: en Datos/ Trabajadores/ Mantenimiento Datos, accede a Afiliación Sistema Red. Despliega Acción y selecciona MA – Alta Sucesiva; pulsa Preparar para enviar. La acción quedará acumulada en una bolsa de acciones listas para procesar.
+
+- Opción desde Afiliaciones: ve a Seguridad Social / Afiliaciones y pulsa Nuevo. Selecciona el trabajador (o trabajadores) y la acción MA – Alta Sucesiva, indica la fecha de alta y pulsa Preparar para enviar. Una vez preparadas, selecciona a los trabajadores y pulsa Generar. Se creará un fichero AFI en la ruta RED/VIPTC2/AFI (o la ruta que tenga tu instalación). Este fichero es lo que se envía a la Seguridad Social a través del canal correspondiente.
+
+- Envío y controles: tras generar, accede a Siltra para procesar las remesas de Afiliación. En la ficha del trabajador, en la sección de Controles, verás la fecha de envío de la Afiliación Sistema Red. Una vez enviado, podrás ver el estado “Afiliación Sistema Red Enviado”. Si todo está correcto, el siguiente paso es confirmar en Siltra y cerrar el ciclo de alta.
+
+- Consejos prácticos: es crucial completar el código de convenio en la acción MA; si el centro ya tiene ese código informando, normalmente se rellena automáticamente. Verifica también que la ocupación y el CNO estén correctos en la ficha para que coincidan con las altas y con las nóminas.
+
+Si me dices cuál es el caso concreto (autónomo, Régimen General/Agrario o Sistema Red) y qué herramientas/datos tienes a mano (convenio, fecha de alta, ocupación, código CNO), te guío paso a paso con las acciones exactas que debes ejecutar y te dejo una lista de comprobación adaptada a tu entorno.
+
+---------------
+Alta de trabajador...
+@@@@@@@@@@@@@@@
+https://a3responde.wolterskluwer.com/es/s/article/como-crear-un-trabajador-autonomo, https://a3responde.wolterskluwer.com/es/s/article/afiliaciones-como-generar-el-movimiento-ma-alta-de-los-trabajadores, https://a3responde.wolterskluwer.com/es/s/article/como-hacer-una-afiliacion-de-un-trabajador-por-sistema-red
     """
 
 
@@ -111,7 +93,7 @@ async def evaluar_documentos(contenido_combinado: str, query: str, instruccion_s
 # query: should be query of the user
 # instruccion_sistema: should be the instructions for the AI that it should keep in mind.
 #Post: it will return an string with the response of the AI, or an string with the iternal error.
-async def getResponseUsingFiles(list_matrix_files, query, instruccion_sistema):
+async def getResponseUsingFiles(list_matrix_files, query, instruccion_sistema, links):
     contenido_para_gemini = obtener_contenidos_y_combinar(list_matrix_files)
     
     if contenido_para_gemini.strip():
