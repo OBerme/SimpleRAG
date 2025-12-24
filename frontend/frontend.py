@@ -9,7 +9,8 @@ DEBUG_MODE_RESPONSE = True
 
 # --- Configuración de URLs ---
 # URL de tu API original (la que procesa el prompt)
-API_URL = "http://api-chatgpt:8000"
+# API_URL = "http://api-chatgpt:8000"
+API_URL = "http://172.17.0.1:8000"
 API_POINT_ENTRY_URL = f"{API_URL}/getResponseWithQuery"
 
 # URL de la nueva API para guardar conversaciones en MongoDB

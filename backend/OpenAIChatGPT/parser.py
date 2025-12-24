@@ -27,12 +27,14 @@ def get_list_links(links):
     return final_links
 
 
-
-def get_json_model_response(response):
+# Pre: get_title_url es un delegado una funcion que va conseguir a traves de una url un titulo
+def get_json_model_response(response, get_title_url):
     response_parsed = get_list_response(response)
     answer = response_parsed[0]
     new_chat_title = clean_response_str(response_parsed[1]) # El título que viene de la IA
-    links = get_list_links(clean_response_str(response_parsed[2].replace('@', '')))
+    raw_links = get_list_links(clean_response_str(response_parsed[2].replace('@', '')))
+    
+    links = [ {"raw_link" : next_raw_link , "title" : get_title_url(next_raw_link)} for next_raw_link in raw_links]
     
     return {
         "answer": answer, 

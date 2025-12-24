@@ -1,0 +1,336 @@
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [66020]
+INFO:uvicorn.error:Stopping reloader process [65907]
+INFO:uvicorn.error:Will watch for changes in these directories: ['/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/SimpleRAG/backend']
+INFO:uvicorn.error:Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:uvicorn.error:Started reloader process [66912] using WatchFiles
+INFO:uvicorn.error:Started server process [67233]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [67233]
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Started server process [67834]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+ERROR:uvicorn.error:Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1512, in uvloop.loop.Loop.run_until_complete
+  File "uvloop/loop.pyx", line 1505, in uvloop.loop.Loop.run_until_complete
+  File "uvloop/loop.pyx", line 1379, in uvloop.loop.Loop.run_forever
+  File "uvloop/loop.pyx", line 557, in uvloop.loop.Loop._run
+  File "uvloop/loop.pyx", line 476, in uvloop.loop.Loop._on_idle
+  File "uvloop/cbhandles.pyx", line 83, in uvloop.loop.Handle._run
+  File "uvloop/cbhandles.pyx", line 63, in uvloop.loop.Handle._run
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/usr/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/rich_toolkit/utils/colors.py", line 159, in <lambda>
+    signal.SIGTERM, lambda signum, frame: (restore_terminal(), sys.exit(0))
+                                                               ^^^^^^^^^^^
+SystemExit: 0
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/starlette/routing.py", line 701, in lifespan
+    await receive()
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/uvicorn/lifespan/on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+INFO:uvicorn.error:Started server process [67960]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [67960]
+INFO:uvicorn.error:Started server process [68177]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [68177]
+INFO:uvicorn.error:Started server process [68503]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'crawl/metadata_extractor.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [68503]
+INFO:uvicorn.error:Started server process [71080]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'basicMarkdownAnaliticScraperFromUrls.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [71080]
+INFO:uvicorn.error:Stopping reloader process [66912]
+INFO:uvicorn.error:Will watch for changes in these directories: ['/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/SimpleRAG/backend']
+INFO:uvicorn.error:Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:uvicorn.error:Started reloader process [78932] using WatchFiles
+INFO:uvicorn.error:Started server process [79258]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+ERROR:api:'coroutine' object is not subscriptable
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [79258]
+INFO:uvicorn.error:Started server process [79463]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+ERROR:api:'NoneType' object is not subscriptable
+WARNING:uvicorn.error:WatchFiles detected changes in 'basicMarkdownAnaliticScraperFromUrls.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [79463]
+INFO:uvicorn.error:Started server process [81620]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'basicMarkdownAnaliticScraperFromUrls.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [81620]
+INFO:uvicorn.error:Started server process [82669]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'basicMarkdownAnaliticScraperFromUrls.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for connections to close. (CTRL+C to force quit)
+INFO:uvicorn.error:Waiting for background tasks to complete. (CTRL+C to force quit)
+INFO:uvicorn.error:Finished server process [82669]
+ERROR:uvicorn.error:Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1512, in uvloop.loop.Loop.run_until_complete
+  File "uvloop/loop.pyx", line 1505, in uvloop.loop.Loop.run_until_complete
+  File "uvloop/loop.pyx", line 1379, in uvloop.loop.Loop.run_forever
+  File "uvloop/loop.pyx", line 557, in uvloop.loop.Loop._run
+  File "uvloop/loop.pyx", line 476, in uvloop.loop.Loop._on_idle
+  File "uvloop/cbhandles.pyx", line 83, in uvloop.loop.Handle._run
+  File "uvloop/cbhandles.pyx", line 63, in uvloop.loop.Handle._run
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/usr/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/rich_toolkit/utils/colors.py", line 159, in <lambda>
+    signal.SIGTERM, lambda signum, frame: (restore_terminal(), sys.exit(0))
+                                                               ^^^^^^^^^^^
+SystemExit: 0
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/starlette/routing.py", line 701, in lifespan
+    await receive()
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/uvicorn/lifespan/on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+INFO:uvicorn.error:Stopping reloader process [78932]
+INFO:uvicorn.error:Will watch for changes in these directories: ['/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/SimpleRAG/backend']
+INFO:uvicorn.error:Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:uvicorn.error:Started reloader process [83595] using WatchFiles
+INFO:uvicorn.error:Started server process [83713]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'basicMarkdownAnaliticScraperFromUrls.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [83713]
+INFO:uvicorn.error:Started server process [84660]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'basicMarkdownAnaliticScraperFromUrls.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [84660]
+WARNING:uvicorn.error:WatchFiles detected changes in 'crawl/metadata_extractor.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Started server process [87341]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+ERROR:api:object str can't be used in 'await' expression
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [87341]
+INFO:uvicorn.error:Started server process [87597]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [87597]
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Started server process [88012]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [88012]
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Started server process [88744]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'OpenAIChatGPT/parser.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [88744]
+INFO:uvicorn.error:Started server process [89355]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'OpenAIChatGPT/parser.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [89355]
+INFO:uvicorn.error:Started server process [89481]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'OpenAIChatGPT/parser.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [89481]
+INFO:uvicorn.error:Started server process [89646]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [89646]
+INFO:uvicorn.error:Started server process [89889]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [89889]
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Started server process [90465]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'OpenAIChatGPT/parser.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [90465]
+INFO:uvicorn.error:Started server process [90617]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+WARNING:uvicorn.error:WatchFiles detected changes in 'OpenAIChatGPT/parser.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [90617]
+WARNING:uvicorn.error:WatchFiles detected changes in 'OpenAIChatGPT/parser.py'. Reloading...
+INFO:uvicorn.error:Started server process [90873]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+ERROR:uvicorn.error:Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1512, in uvloop.loop.Loop.run_until_complete
+  File "uvloop/loop.pyx", line 1505, in uvloop.loop.Loop.run_until_complete
+  File "uvloop/loop.pyx", line 1379, in uvloop.loop.Loop.run_forever
+  File "uvloop/loop.pyx", line 557, in uvloop.loop.Loop._run
+  File "uvloop/loop.pyx", line 476, in uvloop.loop.Loop._on_idle
+  File "uvloop/cbhandles.pyx", line 83, in uvloop.loop.Handle._run
+  File "uvloop/cbhandles.pyx", line 63, in uvloop.loop.Handle._run
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/uvicorn/server.py", line 70, in serve
+    with self.capture_signals():
+  File "/usr/lib/python3.12/contextlib.py", line 144, in __exit__
+    next(self.gen)
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/uvicorn/server.py", line 331, in capture_signals
+    signal.raise_signal(captured_signal)
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/rich_toolkit/utils/colors.py", line 159, in <lambda>
+    signal.SIGTERM, lambda signum, frame: (restore_terminal(), sys.exit(0))
+                                                               ^^^^^^^^^^^
+SystemExit: 0
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/starlette/routing.py", line 701, in lifespan
+    await receive()
+  File "/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/python/ExampleRAG/crawler/crawler-venv/lib/python3.12/site-packages/uvicorn/lifespan/on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+INFO:uvicorn.error:Started server process [90973]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+ERROR:api:name 'deleate_get_title_url' is not defined
+WARNING:uvicorn.error:WatchFiles detected changes in 'api.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [90973]
+INFO:uvicorn.error:Started server process [91596]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.

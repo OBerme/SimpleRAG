@@ -8,9 +8,14 @@ from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, eva
 
 from OpenAIChatGPT.parser import get_json_model_response, get_list_links, get_list_response
 
-# from basicMarkdownAnaliticScraperFromUrls import scarpeMarkdownBasicInfo
+#Librerias para conseguir los datos de las paginas
+# from crawl.crawl_interface import get_links_to_folder, get_page_title
+from crawl.scraper import get_links_to_folder
+from crawl.metadata_extractor import generate_title_from_url
 
-# from scraper import get_links_to_folder
+from basicMarkdownAnaliticScraperFromUrls import scarpeMarkdownBasicInfo
+
+
 import re
 import json
 import logging
@@ -19,6 +24,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='api.log', level=logging.ERROR)
+logging.basicConfig(filename='api.log', level=logging.INFO)
 
 DEBUG_MODE = True
 
@@ -39,15 +45,29 @@ folder_to_save = './documentos_guardados'
 
 @app.get("/getResponseWithQuery")
 async def getResponseWithQuery(query):
-    # await getLinksFromQuery(query)
-    links = await getListLinksFile()
-    links = links[:3]
+    json = None
+    try:
+        # await getLinksFromQuery(query)
+        links = await getListLinksFile()
+        links = links[:3]
 
-    print("Links: ", links)
+        print("Links: ", links)
 
-    # await getFilesFromUrlsFile(links)
-    response = await uploadFiles2API(query, links)
-    return {"response":response}
+        # await getFilesFromUrlsFile(links)
+        json = await uploadFiles2API(query, links)
+        
+        
+    except Exception as error:
+        print(error)
+        logger.error(error)
+        json = {
+            "error":{
+                "message" : "Ocurrio un problema dentro de la API " + str(error)
+            }
+        }
+        
+    return {"response":json}
+    
 
 #@app.get("/getLinksFromQuery")
 async def getLinksFromQuery(query):
@@ -113,58 +133,27 @@ async def uploadFiles2API(query, links):
             SIGUE ESA ESTRUCTURA SIEMPRE.
         """
 
-    try:
-        list_files = FileManager.get_matrix_documents(folder_to_save)
-        # print("List files: ", list_files )
-
-        response= await getResponseUsingFiles(list_files, query, instruccion_sistema, links)
-        if DEBUG_MODE : print(response)
-
-        # FileManager.deleteAllFiles(folder_to_save)
-
-        # print("Response: ", response)
-        
-        # return {"response": response}
-        # return {response}
-        response_json = get_json_model_response(response)
-    
-        return response_json
-        
-    except Exception as error:
-        print(error)
-        logger.error(error)
-        return {
-            "error":{
-                "message" : "Ocurrio un problema dentro de la API"
-            }
-        }
-        #Quiero que menciones de que documentos has sacado la información. De los documentos que te he pasado.
-
-    # files = FileManager.recopilar_nombres_markdown(folder_to_save)
-    # list_files = [ folder_to_save + '/' + next_file_name for next_file_name in files]
-
-    # list_files = list_files[:3]
-    
-
-
-
-@app.get("/getSumUpText")
-async def getResponseWithQuery(text):
-    instruccion_sistema = """
-        Eres una persona que resume textos diariamente y sabes como resumir un texto en 1 y 3 palabras.
-        Tu tarea es resumir el texto que te voy a proporcionar.
-    """ + text
-
-        #Quiero que menciones de que documentos has sacado la información. De los documentos que te he pasado.
-
-    # list_files = list_files[:3]
     list_files = FileManager.get_matrix_documents(folder_to_save)
-    print("List files: ", list_files )
+    # print("List files: ", list_files )
 
-    response = await getResponseUsingFiles(list_files, query, instruccion_sistema)
+    response= await getResponseUsingFiles(list_files, query, instruccion_sistema, links)
+    # if DEBUG_MODE : logger.info(response)
+    if DEBUG_MODE : print(response)
+
     # FileManager.deleteAllFiles(folder_to_save)
+
+    # print("Response: ", response)
+    
     # return {"response": response}
-    return {get_json_model_response(response)}
+    # return {response}
+    delegate_get_title_url = lambda url: generate_title_from_url(url)
+    response_json = get_json_model_response(response, delegate_get_title_url)
+
+    # logger.info("URL " + str(url))
+    
+    return response_json
+    
+
 
 
 

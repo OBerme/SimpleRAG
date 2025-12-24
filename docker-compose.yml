@@ -6,8 +6,8 @@ services:
     # usando el Dockerfile en el directorio actual.
     build: 
       context: ./backend
-      # dockerfile: Dockerfile
-      dockerfile: DockerfileFast
+      dockerfile: Dockerfile
+      # dockerfile: DockerfileFast
     
     # 2. Mapeamos el puerto interno del contenedor (8000) al puerto 
     # de tu máquina local (8000) para poder acceder a la backend.
@@ -54,8 +54,6 @@ services:
     restart: always
     networks:
       - scraper-net
-
-
   
   streamlit-frontend-old:
     # 1. Indicamos a Docker Compose que debe construir la imagen 
@@ -80,6 +78,10 @@ services:
     restart: always
     networks:
       - scraper-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
   db-backend:
     # 1. Indicamos a Docker Compose que debe construir la imagen 
     # usando el Dockerfile en el directorio actual.

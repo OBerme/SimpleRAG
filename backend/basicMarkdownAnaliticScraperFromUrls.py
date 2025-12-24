@@ -193,7 +193,50 @@ def getIndexOfFinal(array_content):
         finalIndex = array_content_length - index + extraWords
         return finalIndex
     
+
+def getTitleMarkdownConfig():
+    prune_filter = PruningContentFilter(
+        threshold=0.5,
+        threshold_type="fixed",  # or "dynamic"
+        min_word_threshold=50
+    )
+    md_generator = DefaultMarkdownGenerator(
+        content_source="fit_html",
+        content_filter=prune_filter,
+        options={
+            "ignore_links": True,
+            "escape_html": False,
+            "body_width": 80,
+            "skip_internal_links": False
+        }
+    )
+    schema = {
+        "name": "Extractor Título de Pestaña",
+        # El baseSelector apunta al bloque superior del documento
+        "baseSelector": "head", 
+        "fields": [
+            {
+                "name": "pageTitle",
+                # Buscamos la etiqueta title directamente
+                "selector": "head.title",
+                "type": "html"
+            }
+        ]
+    }
     
+    extraction_strategy = JsonCssExtractionStrategy(schema, verbose=True)
+    
+        
+    config = CrawlerRunConfig(
+        markdown_generator=md_generator,
+        
+        cache_mode = CacheMode.BYPASS,
+        extraction_strategy=extraction_strategy,
+        wait_for="css:.slds-rich-text-editor__output"
+    )
+    
+    return config
+
 
 async def scarpeMarkdownBasicInfo(urls, outputFolderRelativePath):
     config = getPruneMarkdownConfig()
@@ -228,3 +271,17 @@ async def scarpeMarkdownBasicInfo(urls, outputFolderRelativePath):
             except:
                 continue
             
+
+# async def scarpeTitleMarkdown(urls):
+#     config = getTitleMarkdownConfig()
+
+#     async with AsyncWebCrawler() as crawler:
+#         results = await crawler.arun_many(urls, config=config)
+#         final_results = []
+#         for res in results:
+#             try:
+#                 final_results.append(res.markdown)
+#             except:
+#                 continue
+#         return final_results
+        
