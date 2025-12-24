@@ -5,7 +5,7 @@ from datetime import datetime
 # from API.APIParser import get_list_response
 
 DEBUG_MODE = True
-DEBUG_MODE_RESPONSE = True
+DEBUG_MODE_RESPONSE = False
 
 # --- Configuración de URLs ---
 # URL de tu API original (la que procesa el prompt)
@@ -132,7 +132,7 @@ if prompt := st.chat_input("¿En qué puedo ayudarte?"):
                 # # Formatear la respuesta final
                 full_answer = f"{answer}\n\n**Enlaces de interés:**\n\n"
                 for link in links:
-                    full_answer += f"{link}\n"
+                    full_answer += f"📄 [{link.get('title')}]({link.get('raw_link')})\n\n"
                 
                 message_placeholder.markdown(full_answer)
 
