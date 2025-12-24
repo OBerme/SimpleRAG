@@ -2,8 +2,8 @@ from fastapi import FastAPI
 
 from fileManager import FileManager
 # from GoogleGemini.googleGeminiFilesUploaderFinal import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-# from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+# from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
 # # from OpenAIChatGPT.APIInterfaceCallableFilesVersion import getResponseUsingFiles
 
 from OpenAIChatGPT.parser import get_json_model_response, get_list_links, get_list_response
@@ -47,13 +47,13 @@ folder_to_save = './documentos_guardados'
 async def getResponseWithQuery(query):
     json = None
     try:
-        # await getLinksFromQuery(query)
+        await getLinksFromQuery(query)
         links = await getListLinksFile()
         links = links[:3]
 
         print("Links: ", links)
 
-        # await getFilesFromUrlsFile(links)
+        await getFilesFromUrlsFile(links)
         json = await uploadFiles2API(query, links)
         
         
@@ -123,6 +123,8 @@ async def uploadFiles2API(query, links):
             ### LINKS DE CADA DOCUMENTO
             Y quiero que me incluyas los links de los documentos que se ajusten mejor y que has utilizado para responder al usuario.
             Y tiene que seguir el siguiente patrón para separar un :"@@@@@@@@@@@@@@@", TIENEN QUE SER 15 @ EN TOTAL
+            TODOS LOS LINKS TIENEN QUE ESTAR SEPARADOS MEDIANTE UNA COMA, SIEMPRE. Por ejemplo: link1, link2, link3
+            
             La respuesta final tiene que ser muy parecida a este ejemplo:
             "texto principal
             ---------------
@@ -140,16 +142,10 @@ async def uploadFiles2API(query, links):
     # if DEBUG_MODE : logger.info(response)
     if DEBUG_MODE : print(response)
 
-    # FileManager.deleteAllFiles(folder_to_save)
-
-    # print("Response: ", response)
+    FileManager.deleteAllFiles(folder_to_save)
     
-    # return {"response": response}
-    # return {response}
     delegate_get_title_url = lambda url: generate_title_from_url(url)
     response_json = get_json_model_response(response, delegate_get_title_url)
-
-    # logger.info("URL " + str(url))
     
     return response_json
     

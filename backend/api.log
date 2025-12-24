@@ -334,3 +334,73 @@ INFO:uvicorn.error:Finished server process [90973]
 INFO:uvicorn.error:Started server process [91596]
 INFO:uvicorn.error:Waiting for application startup.
 INFO:uvicorn.error:Application startup complete.
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [91596]
+INFO:uvicorn.error:Stopping reloader process [83595]
+INFO:uvicorn.error:Will watch for changes in these directories: ['/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/SimpleRAG/backend']
+INFO:uvicorn.error:Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:uvicorn.error:Started reloader process [2103] using WatchFiles
+INFO:uvicorn.error:Started server process [2437]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+ERROR:api:list index out of range
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [2437]
+INFO:uvicorn.error:Stopping reloader process [2103]
+INFO:uvicorn.error:Will watch for changes in these directories: ['/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/SimpleRAG/backend']
+INFO:uvicorn.error:Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:uvicorn.error:Started reloader process [4293] using WatchFiles
+INFO:uvicorn.error:Started server process [4408]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+ERROR:api:list index out of range
+WARNING:uvicorn.error:WatchFiles detected changes in 'OpenAIChatGPT/APIInterfaceCallable.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [4408]
+INFO:uvicorn.error:Started server process [5372]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+ERROR:api:list index out of range
+WARNING:uvicorn.error:WatchFiles detected changes in 'OpenAIChatGPT/APIInterfaceCallable.py'. Reloading...
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [5372]
+INFO:uvicorn.error:Started server process [6195]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [6195]
+INFO:uvicorn.error:Stopping reloader process [4293]
+INFO:uvicorn.error:Will watch for changes in these directories: ['/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/SimpleRAG/backend']
+INFO:uvicorn.error:Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:uvicorn.error:Started reloader process [7718] using WatchFiles
+INFO:uvicorn.error:Started server process [7831]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [7831]
+INFO:uvicorn.error:Stopping reloader process [7718]
+INFO:uvicorn.error:Will watch for changes in these directories: ['/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/SimpleRAG/backend']
+ERROR:uvicorn.error:[Errno 98] Address already in use
+INFO:uvicorn.error:Will watch for changes in these directories: ['/mnt/c/Users/ÓscarBermejoDomíngue/Documents/workspace/SimpleRAG/backend']
+INFO:uvicorn.error:Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:uvicorn.error:Started reloader process [12077] using WatchFiles
+INFO:uvicorn.error:Started server process [12320]
+INFO:uvicorn.error:Waiting for application startup.
+INFO:uvicorn.error:Application startup complete.
+INFO:uvicorn.error:Shutting down
+INFO:uvicorn.error:Waiting for application shutdown.
+INFO:uvicorn.error:Application shutdown complete.
+INFO:uvicorn.error:Finished server process [12320]
+INFO:uvicorn.error:Stopping reloader process [12077]
