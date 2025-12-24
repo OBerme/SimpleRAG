@@ -13,8 +13,14 @@ from OpenAIChatGPT.parser import get_json_model_response, get_list_links, get_li
 # from scraper import get_links_to_folder
 import re
 import json
+import logging
 
 from fastapi.middleware.cors import CORSMiddleware
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename='api.log', level=logging.ERROR)
+
+DEBUG_MODE = True
 
 app = FastAPI()
 
@@ -91,36 +97,54 @@ async def uploadFiles2API(query, links):
 
             ### RESUMEN DE LA RESPUESTA
             Quiero que al final hagas un resumen entre 1 y 3 palabras.
-            Separame el resumen, entre 1 y 3 palabras del texto principal con el siguiente patrón :"---------------"
+            Separame el resumen, entre 1 y 3 palabras del texto principal con el siguiente patrón :"---------------". TIENEN QUE SER 15 - EN TOTAL
 
 
             ### LINKS DE CADA DOCUMENTO
             Y quiero que me incluyas los links de los documentos que se ajusten mejor y que has utilizado para responder al usuario.
-
+            Y tiene que seguir el siguiente patrón para separar un :"@@@@@@@@@@@@@@@", TIENEN QUE SER 15 @ EN TOTAL
             La respuesta final tiene que ser muy parecida a este ejemplo:
-            "(texto principal) --------------- (resumen en 1-3 palabras) @@@@@@@@@@@@@@@ (link 1, link 2, link 3)"
+            "texto principal
+            ---------------
+            resumen en 1-3 palabras
+            @@@@@@@@@@@@@@@
+            link 1, link 2, link 3"
             IMPORTANTE: SIGUE SIEMPRE ÉSTA ESTRUCTURA Y NO HAGAS COSAS DIFERENTES. Ni metas una línea que ponga Resumen: ... ni nada por el estilo,
             SIGUE ESA ESTRUCTURA SIEMPRE.
         """
 
+    try:
+        list_files = FileManager.get_matrix_documents(folder_to_save)
+        # print("List files: ", list_files )
 
+        response= await getResponseUsingFiles(list_files, query, instruccion_sistema, links)
+        if DEBUG_MODE : print(response)
+
+        # FileManager.deleteAllFiles(folder_to_save)
+
+        # print("Response: ", response)
+        
+        # return {"response": response}
+        # return {response}
+        response_json = get_json_model_response(response)
+    
+        return response_json
+        
+    except Exception as error:
+        print(error)
+        logger.error(error)
+        return {
+            "error":{
+                "message" : "Ocurrio un problema dentro de la API"
+            }
+        }
         #Quiero que menciones de que documentos has sacado la información. De los documentos que te he pasado.
 
     # files = FileManager.recopilar_nombres_markdown(folder_to_save)
     # list_files = [ folder_to_save + '/' + next_file_name for next_file_name in files]
 
     # list_files = list_files[:3]
-    list_files = FileManager.get_matrix_documents(folder_to_save)
-    # print("List files: ", list_files )
-
-    response = await getResponseUsingFiles(list_files, query, instruccion_sistema, links)
-    # FileManager.deleteAllFiles(folder_to_save)
-
-    # print("Response: ", response)
     
-    # return {"response": response}
-    # return {response}
-    return get_json_model_response(response)
 
 
 

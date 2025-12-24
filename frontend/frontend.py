@@ -5,6 +5,7 @@ from datetime import datetime
 # from API.APIParser import get_list_response
 
 DEBUG_MODE = True
+DEBUG_MODE_RESPONSE = True
 
 # --- Configuración de URLs ---
 # URL de tu API original (la que procesa el prompt)
@@ -109,44 +110,50 @@ if prompt := st.chat_input("¿En qué puedo ayudarte?"):
         try:
             response = requests.get(API_POINT_ENTRY_URL, params={"query": prompt})
             
+            if DEBUG_MODE_RESPONSE : st.write(response)
+            
             data = (response.json())['response']
-            
-            print("Data: ", data)
-            answer = data['answer'] # Aprovechamos para limpiar los \n
-            title = data['chat_title']
-            links = data['links']
-            
-            # answer= "esto seria la respuesta del texto"
-            # links=["link 1", "link 2", "link 3"]
-            # title="nombre del chat"
-            
-            st.session_state.messages.append({"role": "assistant", "content": response})
-            
-            
-            # # Formatear la respuesta final
-            full_answer = f"{answer}\n\n**Enlaces de interés:**\n\n"
-            for link in links:
-                full_answer += f"{link}\n"
-            
-            message_placeholder.markdown(full_answer)
-
-            # --- GESTIÓN DE BASE DE DATOS ---
-            if st.session_state.current_conversation_id is None:
-                # Si es nuevo, creamos la conversación con el título de la IA
-                new_id = create_new_conversation(prompt, title)
-                if new_id:
-                    st.session_state.current_conversation_id = new_id
-                    st.session_state.title = title
+            if 'error' not in data :
+                
+                
                     
-            
-            # Guardar en memoria y DB
-            save_message_to_db(st.session_state.current_conversation_id, "user", prompt)
-            save_message_to_db(st.session_state.current_conversation_id, "assistant", full_answer)
-            st.session_state.messages.append({"role": "assistant", "content": full_answer})
-            
-            # Forzamos rerun para que el título de la página se actualice arriba
-            st.rerun()
-            
+                answer = data['answer'] # Aprovechamos para limpiar los \n
+                title = data['chat_title']
+                links = data['links']
+                
+                # answer= "esto seria la respuesta del texto"
+                # links=["link 1", "link 2", "link 3"]
+                # title="nombre del chat"
+                
+                st.session_state.messages.append({"role": "assistant", "content": response})
+                
+                
+                # # Formatear la respuesta final
+                full_answer = f"{answer}\n\n**Enlaces de interés:**\n\n"
+                for link in links:
+                    full_answer += f"{link}\n"
+                
+                message_placeholder.markdown(full_answer)
+
+                # --- GESTIÓN DE BASE DE DATOS ---
+                if st.session_state.current_conversation_id is None:
+                    # Si es nuevo, creamos la conversación con el título de la IA
+                    new_id = create_new_conversation(prompt, title)
+                    if new_id:
+                        st.session_state.current_conversation_id = new_id
+                        st.session_state.title = title
+                        
+                
+                # Guardar en memoria y DB
+                save_message_to_db(st.session_state.current_conversation_id, "user", prompt)
+                save_message_to_db(st.session_state.current_conversation_id, "assistant", full_answer)
+                st.session_state.messages.append({"role": "assistant", "content": full_answer})
+                
+                # Forzamos rerun para que el título de la página se actualice arriba
+                st.rerun()
+            else:
+                st.write(data['error']['message'])
+                
         except Exception as e:
             if DEBUG_MODE:
                 # Capturamos el error completo

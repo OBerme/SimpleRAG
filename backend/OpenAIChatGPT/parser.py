@@ -30,13 +30,13 @@ def get_list_links(links):
 
 def get_json_model_response(response):
     response_parsed = get_list_response(response)
-    
     answer = response_parsed[0]
     new_chat_title = clean_response_str(response_parsed[1]) # El título que viene de la IA
-    links = get_list_links(clean_response_str(response_parsed[2]))
+    links = get_list_links(clean_response_str(response_parsed[2].replace('@', '')))
     
     return {
         "answer": answer, 
         "chat_title": new_chat_title, 
         "links": links
     }
+    

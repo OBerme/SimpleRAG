@@ -85,41 +85,82 @@ async def evaluar_documentos(contenido_combinado: str, query: str, instruccion_s
 # @@@@@@@@@@@@@@@
 # https://a3responde.wolterskluwer.com/es/s/article/como-crear-un-trabajador-autonomo, https://a3responde.wolterskluwer.com/es/s/article/afiliaciones-como-generar-el-movimiento-ma-alta-de-los-trabajadores, https://a3responde.wolterskluwer.com/es/s/article/como-hacer-una-afiliacion-de-un-trabajador-por-sistema-red
 #     """
-
     return """
-    No existe una opción explícita de “mínimos de stock” o “punto de pedido” descrita en las herramientas evaluadas. Con lo que se especifica en las funciones de stock, puedes gestionar y monitorizar niveles de inventario, pero no aparece un campo directo para fijar un mínimo por artículo ni una alerta automática de reposición. Aun así, puedes aplicar un enfoque práctico utilizando las funciones disponibles para mantener controlados tus niveles y planificar la reposición de forma semi-automatizada o manual.
+    Para configurar los mínimos de stock de forma efectiva conviene distinguir entre dos conceptos clave: el stock mínimo y el punto de pedido (ROP, por sus siglas en inglés). El stock mínimo es la reserva mínima que quieres mantener en almacén para hacer frente a variaciones de demanda o imprevistos sin quedarte sin inventorios, mientras que el punto de pedido es la cantidad de existencias que, al alcanzarse, activa una reposición para evitar quedarse sin stock antes de recibir el pedido. En la práctica, se suelen vincular ambos conceptos a una política de reabastecimiento que persiga un nivel de servicio deseado y unas condiciones de coste razonables.
 
-    Qué puedes hacer con las opciones y la gestión de stock
+    Pasos prácticos para configurarlos
 
-    - Configuración general de stock: puedes definir si los nuevos productos afectan al stock, elegir la valoración por defecto (por ejemplo, último precio de compra, precio de compra, precio de venta) y permitir stocks negativos. Estas configuraciones influyen en cómo se gestiona y registra el stock, pero no establecen una cantidad mínima por artículo. Sirven para dejar claro el comportamiento del sistema frente a entradas de inventario y a la valoración, lo que a su vez facilita la planificación y el análisis de costos cuando determines tus mínimos.
+    1) Define el objetivo de servicio por artículo
+    No todos los productos requieren el mismo nivel de servicio. Clasifica tu catálogo (por ejemplo, A, B y C) y asigna objetivos de servicio distintos. Los artículos de mayor valor o con mayor rotación—los de clase A—tienden a requerir niveles de servicio superiores y, por tanto, mayores stock mínimos y puntos de pedido más conservadores.
 
-    - Ficha de artículo y stock: en la ficha de cada artículo se indica si el artículo afecta al stock y muestra el stock actual, así como las reservas de pedidos de compra y de venta y la previsión. También se registra la valoración y se observa el estado de stock. Con estas informaciones puedes decidir, artículo por artículo, qué nivel de stock consideras mínimo para no interrumpir ventas o producción. En la práctica, deberás fijar un umbral mínimo fuera del sistema (en tu propio registro o en un plan de compras) y revisarlo con regularidad utilizando la visión general del stock y la previsión.
+    2) Reúne y limpia los datos
+    Necesitas datos históricos de demanda por artículo (diaria o semanal), el plazo de entrega del proveedor (lead time) y la variabilidad de la demanda. También importa conocer las fechas de entrega reales, la fiabilidad de tus proveedores y, si aplica, estacionalidad. Registra también el stock actual, costes de pedido y costes de mantenimiento de inventario.
 
-    - Gestión de inventarios: puedes calcular inventario, exportarlo e importarlo a Excel. Esta funcionalidad es útil para realizar revisiones periódicas y verificar caídas de stock frente a tus umbrales mínimos. Si quieres monitorizar de forma estructurada, puedes hacer un recuento de inventario y, a partir de los datos exportados, identificar cuáles artículos están por debajo de tus niveles mínimos y planificar compras o ajustes.
+    3) Calcula la demanda durante el lead time
+    Demanda durante el lead time (DLT) = demanda diaria promedio x lead time (en días). Si tu lead time es en días hábiles, úsalo así; si es en días naturales, ajusta el cálculo. 
 
-    - Gestión de stock y consultas: la opción de consultar stock te permite ver el stock de todos los artículos y exportarlo a Excel. También puedes ver movimientos de stock filtrando por artículo y por rango de fechas. Estas vistas son clave para detectar cuando un artículo baja de tu mínimo deseado y para entender la dinámica de entradas y salidas (ventas, compras, mermas, devoluciones) que afectan a tus umbrales.
+    4) Evalúa la variabilidad y calcula el stock de seguridad
+    - Desviación típica de la demanda diaria (σD) durante el periodo considerado.
+    - Lead time en días (L).
+    - σDL = σD x sqrt(L) (demanda durante el lead time).
+    - Elige un nivel de servicio deseado (por ejemplo, 95% o 99%). El valor z correspondiente se obtiene de la tabla normal (aproximadamente 1.65 para 95%, 2.33 para 99%).        
+    - Stock de seguridad (SS) = z x σDL.
 
-    - Regularizaciones: si hay discrepancias entre el stock físico y el registrado, la regularización te permite corregir esas diferencias. Mantener el inventario exacto es fundamental para que los mínimos que definas sean fiables y para evitar reposiciones innecesarias o faltantes por errores en el conteo.
+    5) Determina el punto de pedido (ROP)
+    - Demanda durante el lead time (DLT) = promedio diario x lead time.
+    - ROP = DLT + SS.
+    Cuando el inventario disponible alcance el ROP, ejecuta la reposición para volver a alcanzar un nivel de stock seguro.
 
-    Cómo establecer un flujo práctico para mínimos (sin una opción automática en el sistema)
+    6) Define el stock mínimo
+    - Opción conservadora: igual al SS (mantenes una reserva puramente de seguridad).
+    - Opción operativa: establece un mínimo que cubra parte de la demanda durante un periodo de revisión adicional (por ejemplo, 1–2 semanas) para compensar posibles retrasos o variaciones.
+    - Si tu revisión de inventario es periódica, puede ser razonable fijar el stock mínimo como SS más una cobertura adicional para el periodo entre revisiones.
 
-    - Define un mínimo por artículo fuera del sistema: para cada artículo, decide una cantidad mínima a mantener basada en consumo histórico, plazos de reposición y tolerancia de seguridad. Este mínimo se puede anotar en un registro externo o en una columna adicional dentro de tu propio sistema de control de inventarios si el ERP lo permite.
+    7) Configuración en el sistema
+    - Campo de stock mínimo: fija el mínimo deseado por artículo.
+    - Punto de pedido: introduce el valor ROP calculado.
+    - Cantidad a pedir: define la cantidad de pedido (EOQ o una cantidad acordada con proveedores) que repondrá desde el nivel actual hasta el máximo deseado.
+    - Máximo de stock: establece un tope para evitar sobreacumulación.
+    - Política de revisión: selecciona si es una revisión continua (ERP dispara pedido al alcanzar ROP) o si es una revisión periódica (revisa a intervalos fijos y reordena para regresar al nivel máximo).
 
-    - Monitorea stock actual y previsto: usa la visión de stock para revisar el stock real y el “previsto” para cada artículo. Si el stock actual está por debajo de tu mínimo, planifica la reposición. Usa la exportación de stock para generar listas de pedido o para preparar importaciones de actualización de inventario con cantidades de compra necesarias.
+    8) Mecanismos de revisión y ajuste
+    - Monitoriza regularmente (semanal o quincenal) los artículos con mayor rotación y mayor variabilidad.
+    - Ajusta SS y ROP ante cambios en lead times, confiabilidad de proveedores o cambios de demanda estacional.
+    - Si trabajas con productos perecibles o con caducidad, añade consideraciones de obsolescencia y rotación en tus cálculos.
 
-    - Revisa movimientos y demanda: con Movimiento de stock y con las exportaciones de stock, analiza tendencias de venta y uso. Si observas caídas continuas o picos de demanda, ajusta tu mínimo o el plan de reaprovisionamiento en consecuencia para evitar faltantes.
+    9) Ejemplos operativos
+    Ejemplo simplificado: artículo X
+    - Demanda diaria promedio: 25 unidades
+    - Lead time: 10 días
+    - σD: 8 unidades
+    - Nivel de servicio: 95% (z ≈ 1.65)
+    - σDL = σD x sqrt(L) ≈ 8 x sqrt(10) ≈ 25.3
+    - SS ≈ 1.65 x 25.3 ≈ 41–42 unidades
+    - DLT ≈ 25 x 10 = 250 unidades
+    - ROP ≈ 250 + 42 ≈ 292 unidades
+    - Stock mínimo recomendado: 292–300 unidades (dependiendo de si quieres incluir una cobertura adicional)
+    - Cantidad a pedir: si tu política es EOQ, calcula la cantidad óptima y ajústala para no superar el stock máximo.
 
-    - Plan de compras basado en mínimos: si tu entorno lo permite, complementa la revisión de stock con un procedimiento de compras donde, cada vez que exportas y comparas stock con mínimos, generas un pedido de compra para aquellos artículos por debajo del umbral. Si no hay reglas automáticas, este paso puede hacerse manualmente pero con un proceso definido para no perder reposiciones.
+    10) Seguimiento y mejora continua
+    - Revisa métricas como tasas de stockouts, rotación de inventario y coste total de inventario.
+    - Ajusta SS y ROP cuando cambien las condiciones de suministro o la demanda.
+    - Implementa alertas automáticas para cuando el inventario caiga por debajo del stock mínimo o esté por debajo del ROP.
 
-    Qué documentos o guías conviene consultar para afinar el proceso
+    Qué documentos serían útiles para afinar la configuración
+    - Datos de demanda histórica por artículo (últimos 12–24 meses) y su variabilidad.
+    - Lead times y fiabilidad de cada proveedor.
+    - Políticas de servicio por categoría de producto.
+    - Costes de pedido y costes de mantenimiento de inventario.
+    - Niveles de stock actuales y estructuras de lote/embalaje.
+    - Cualquier regla de negocio especial (caducidad, lotes, restricciones de compra).
 
-    - Busca una guía específica del módulo de inventario que describa “niveles mínimos”, “punto de pedido” o “alertas de reposición” si tu versión de A3factura los soporta. Es posible que exista un campo adicional o una configuración avanzada no cubierta por las secciones evaluadas.
+    Si quieres, te puedo ayudar a crear una plantilla de cálculo en tu hoja de cálculo o a orientar la configuración en tu ERP con ejemplos adaptados a tu catálogo.
 
-    - Revisa manuales de usuario o guías de flujo de compras e inventario que expliquen cómo activar alertas, si existen, o cómo integrar mínimos con órdenes de compra automáticas.     
+    ---------------
 
-    - Si en tu entorno hay personalización o integraciones, considera la posibilidad de añadir una regla externa o un informe programado que compare stock actual con mínimos definidos y notifique a compras cuando se cruza el umbral.
-
-    En resumen, no hay una configuración directa de “mínimos de stock” en las funciones descritas. Sin embargo, puedes establecer mínimos de forma manual para cada artículo y apoyarte en la consulta de stock, la gestión de inventarios y las exportaciones para monitorizar y activar reposiciones. Mantén el inventario cuidado con regularizaciones para asegurar que los mínimos sean válidos y confiables. Si necesitas una solución automática, conviene buscar en la documentación específica del módulo o consultar con soporte para ver si existe una funcionalidad de puntos de pedido o alertas que se pueda activar en tu versión.---------------Niveles mínimos@@@@@@@@@@@@@@@https://a3responde.wolterskluwer.com/es/s/article/funcionamiento-stock-en-a3factura-a3factura
+    Punto de pedido
+    @@@@@@@@@@@@@@@
+    https://a3responde.wolterskluwer.com/es/s/article/como-crear-un-trabajador-autonomo, https://a3responde.wolterskluwer.com/es/s/article/como-hacer-una-afiliacion-de-un-trabajador-por-sistema-red, https://a3responde.wolterskluwer.com/es/s/article/190-gastos-de-seguridad-social-se-duplican-en-a01-a02, https://a3responde.wolterskluwer.com/es/s/article/afiliaciones-como-generar-el-movimiento-ma-alta-de-los-trabajadores
     """
 
 # Función de enrutamiento que utiliza la lógica combinada
