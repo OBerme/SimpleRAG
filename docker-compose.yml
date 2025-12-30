@@ -22,7 +22,8 @@ services:
       - ./backend:/api-chatgpt
 
     env_file:
-      - ./backend/.env
+      # - ./backend/.env
+      - /home/oscarestud/.env
       
 
     networks:
