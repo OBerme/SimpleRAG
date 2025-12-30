@@ -55,33 +55,6 @@ services:
     networks:
       - scraper-net
   
-  streamlit-frontend-old:
-    # 1. Indicamos a Docker Compose que debe construir la imagen 
-    # usando el Dockerfile en el directorio actual.
-    build: 
-      context: ./frontend
-      dockerfile: Dockerfileold
-    
-    # 2. Mapeamos el puerto interno del contenedor (8000) al puerto 
-    # de tu máquina local (8000) para poder acceder a la API.
-    ports:
-      - "8502:8502"
-      
-    # 3. Mapeamos el código local al contenedor. 
-    # Esto es ÚTIL PARA EL DESARROLLO (hot-reloading): 
-    # si cambias tu código Python, se reflejará automáticamente
-    # sin tener que reconstruir la imagen.
-    volumes:
-      - ./frontend:/app-frontend-old
-    
-    # 5. Comando para reiniciar si falla (opcional)
-    restart: always
-    networks:
-      - scraper-net
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-
   db-backend:
     # 1. Indicamos a Docker Compose que debe construir la imagen 
     # usando el Dockerfile en el directorio actual.

@@ -1,18 +1,27 @@
-# 1. RED (VCN)
+# -----------------------------------------------------------------------
+# 1. CONFIGURACIÓN DEL PROVEEDOR (Para que funcione con Resource Manager)
+# -----------------------------------------------------------------------
+provider "oci" {
+  region = var.region
+}
+
+# -----------------------------------------------------------------------
+# 2. RED (VCN) - La carretera principal
+# -----------------------------------------------------------------------
 resource "oci_core_vcn" "mi_red" {
   cidr_block     = "10.0.0.0/16"
   compartment_id = var.compartment_ocid
   display_name   = "Red-SimpleRAG"
 }
 
-# 2. PUERTA A INTERNET
+# Puerta de enlace para tener Internet
 resource "oci_core_internet_gateway" "mi_ig" {
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_vcn.mi_red.id
   display_name   = "InternetGateway"
 }
 
-# 3. TABLA DE RUTAS
+# Mapa de carreteras (Tabla de rutas)
 resource "oci_core_route_table" "mi_rt" {
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_vcn.mi_red.id
@@ -22,36 +31,79 @@ resource "oci_core_route_table" "mi_rt" {
   }
 }
 
-# 4. SUBRED PÚBLICA
+# -----------------------------------------------------------------------
+# 3. FIREWALL (SECURITY LIST) - Aquí abrimos los puertos de tu App
+# -----------------------------------------------------------------------
+resource "oci_core_security_list" "mi_firewall_app" {
+  compartment_id = var.compartment_ocid
+  vcn_id         = oci_core_vcn.mi_red.id
+  display_name   = "Reglas-App-RAG"
+
+  # REGLA 1: SSH (Puerto 22) - Para que tú puedas entrar
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "0.0.0.0/0"
+    tcp_options {
+      min = 22
+      max = 22
+    }
+  }
+
+  # REGLA 2: STREAMLIT (Puerto 8501) - Tu página web
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "0.0.0.0/0"
+    tcp_options {
+      min = 8501
+      max = 8501
+    }
+  }
+
+  
+  # NOTA: El puerto 8001 (Base de datos) NO se abre al público por seguridad.
+  # Los contenedores se comunicarán internamente.
+
+}
+
+# -----------------------------------------------------------------------
+# 4. SUBRED PÚBLICA - Donde vive el servidor
+# -----------------------------------------------------------------------
 resource "oci_core_subnet" "mi_subnet" {
   cidr_block        = "10.0.1.0/24"
   compartment_id    = var.compartment_ocid
   vcn_id            = oci_core_vcn.mi_red.id
   display_name      = "Subred-Publica"
   route_table_id    = oci_core_route_table.mi_rt.id
+  # AQUÍ VINCULAMOS EL FIREWALL QUE CREAMOS ARRIBA
+  security_list_ids = [oci_core_security_list.mi_firewall_app.id]
 }
 
-# 5. BUSCAR IMAGEN DE LINUX
+# -----------------------------------------------------------------------
+# 5. DATOS AUXILIARES (Buscar imagen Linux y Zona de Disponibilidad)
+# -----------------------------------------------------------------------
 data "oci_core_images" "oracle_linux" {
   compartment_id   = var.compartment_ocid
   operating_system = "Oracle Linux"
   operating_system_version = "8"
-  shape            = "VM.Standard.A1.Flex" # Ojo: Cambia a VM.Standard.A1.Flex si usas esa capa gratuita
+  # Si usas la capa gratuita ARM (Ampere), cambia esto a "VM.Standard.A1.Flex"
+  shape            = "VM.Standard.E2.1.Micro" 
   sort_by          = "TIMECREATED"
   sort_order       = "DESC"
 }
 
-# 6. BUSCAR ZONA DE DISPONIBILIDAD
 data "oci_identity_availability_domains" "ads" {
   compartment_id = var.compartment_ocid
 }
 
-# 7. EL SERVIDOR
+# -----------------------------------------------------------------------
+# 6. EL SERVIDOR (INSTANCIA) - La máquina final
+# -----------------------------------------------------------------------
 resource "oci_core_instance" "mi_servidor" {
   availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
   compartment_id      = var.compartment_ocid
   display_name        = "Servidor-SimpleRAG"
-  shape               = "VM.Standard.A1.Flex" 
+  # Si usas la capa gratuita ARM, cambia esto a "VM.Standard.A1.Flex"
+  shape               = "VM.Standard.E2.1.Micro" 
 
   create_vnic_details {
     subnet_id        = oci_core_subnet.mi_subnet.id
@@ -63,15 +115,39 @@ resource "oci_core_instance" "mi_servidor" {
     source_id   = data.oci_core_images.oracle_linux.images[0].id
   }
 
-  # Script de inicio para descargar tu app
+  # -----------------------------------------------------------
+  # AQUÍ ESTÁ LA MAGIA: CONFIGURACIÓN AUTOMÁTICA
+  # -----------------------------------------------------------
   metadata = {
+    # 1. CAMBIO OBLIGATORIO: PEGA TU CLAVE PÚBLICA AQUÍ (la que empieza por ssh-rsa...)
     ssh_authorized_keys = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDkfEJNjuUaJHQVVsb5tHsN3tJyMPb4YCeC05LyiWmOp6fChjCk0/MgT/5uLAFcGFjkPlsolwH3sr7SiRTy7VbF+jD8O/t0V3uK8wngvtLzEIkFopCjLLi4ec/J0B8BYqlV6qwez+wwnZAJUXCXC2dI+txYC0QBcoCQulc51mPVNbWCBe5Ns2S40QwgridrxnwGj/gjdRagjD2GI6e792+4q+g+oQ0ckI3RwSxM8AJN47o51ysO+2yk013y5sl1IXcLNBGswuxcIAt6MBrQr5FllIy/Y+w3O3JRulsBJGbYeK0Jp7z35XSQmg9DfJupabCgVINQjZuhkFzz5UKXMZ8VMmQyu4Qe1TrF1kUmGPVd5jH6J/c8Rd15XYhfulu8wriccbD7lPvtx64HIxyFUSgB8fRlpi2P1pAeURb6pKNQN6svle+WcBTBClK/osPoCTkBwEDxAbdRtgKlv9p4NQodHWR560gLqEnLHq667ayqPdEsGDaP2BE8er6E8Pub5BnksmL9FU7MnhuTQ1DSHmdUeqKT4un056wBybsb0ArP1HZzTBR5CmC/C8ni+PW83mFZiNKhuxnrBMeMpK55b5hKmJaYKyuIXfWBaEjfCiwuM6983JqZN2Slczj2B65XcMxpaMV/egvZFEnzmGB3YuRf9w59Bk8kfZYL1AXwh87n7w== oscarestud@aa5f2d900ce2"
+    
+    # 2. SCRIPT DE INSTALACIÓN
     user_data = base64encode(<<-EOF
       #!/bin/bash
-      sudo yum update -y
-      sudo yum install -y git
+      # Actualizar sistema e instalar Git
+      sudo dnf update -y
+      sudo dnf install -y git
+
+      # Instalar Docker
+      sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
+      sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+      sudo systemctl enable --now docker
+
+      # Preparar carpetas
       mkdir -p /home/opc/app
+      
+      # 3. CAMBIO OBLIGATORIO: PON AQUÍ LA URL DE TU GITHUB (Usuario correcto)
       git clone https://github.com/OBerme/SimpleRAG.git /home/opc/app/SimpleRAG
+
+      # Permisos para el usuario opc
+      sudo usermod -aG docker opc
+      sudo chown -R opc:opc /home/opc/app
+
+      # Arrancar Docker Compose
+      cd /home/opc/app/SimpleRAG
+      # Esto tardará un rato porque tiene que construir (build) las imágenes
+      docker compose up -d --build
     EOF
     )
   }
