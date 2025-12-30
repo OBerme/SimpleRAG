@@ -65,13 +65,13 @@ resource "oci_core_instance" "mi_servidor" {
 
   # Script de inicio para descargar tu app
   metadata = {
-    ssh_authorized_keys = "PEGA_AQUI_TU_CLAVE_PUBLICA_SSH_SI_QUIERES_ENTRAR"
+    ssh_authorized_keys = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDkfEJNjuUaJHQVVsb5tHsN3tJyMPb4YCeC05LyiWmOp6fChjCk0/MgT/5uLAFcGFjkPlsolwH3sr7SiRTy7VbF+jD8O/t0V3uK8wngvtLzEIkFopCjLLi4ec/J0B8BYqlV6qwez+wwnZAJUXCXC2dI+txYC0QBcoCQulc51mPVNbWCBe5Ns2S40QwgridrxnwGj/gjdRagjD2GI6e792+4q+g+oQ0ckI3RwSxM8AJN47o51ysO+2yk013y5sl1IXcLNBGswuxcIAt6MBrQr5FllIy/Y+w3O3JRulsBJGbYeK0Jp7z35XSQmg9DfJupabCgVINQjZuhkFzz5UKXMZ8VMmQyu4Qe1TrF1kUmGPVd5jH6J/c8Rd15XYhfulu8wriccbD7lPvtx64HIxyFUSgB8fRlpi2P1pAeURb6pKNQN6svle+WcBTBClK/osPoCTkBwEDxAbdRtgKlv9p4NQodHWR560gLqEnLHq667ayqPdEsGDaP2BE8er6E8Pub5BnksmL9FU7MnhuTQ1DSHmdUeqKT4un056wBybsb0ArP1HZzTBR5CmC/C8ni+PW83mFZiNKhuxnrBMeMpK55b5hKmJaYKyuIXfWBaEjfCiwuM6983JqZN2Slczj2B65XcMxpaMV/egvZFEnzmGB3YuRf9w59Bk8kfZYL1AXwh87n7w== oscarestud@aa5f2d900ce2"
     user_data = base64encode(<<-EOF
       #!/bin/bash
       sudo yum update -y
       sudo yum install -y git
       mkdir -p /home/opc/app
-      git clone https://github.com/tu-usuario/SimpleRAG.git /home/opc/app/SimpleRAG
+      git clone https://github.com/OBerme/SimpleRAG.git /home/opc/app/SimpleRAG
     EOF
     )
   }
