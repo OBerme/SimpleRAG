@@ -14,11 +14,11 @@ terraform {
     }
     local = {
       source  = "hashicorp/local"
-      version = "1.4.0" # Latest version as March 2021 = 2.1.0. Using 1.4.0 (September, 2019) for ORM compatibility
+
     }
     random = {
       source  = "hashicorp/random"
-      version = "2.3.0" # Latest version as March 2021 = 3.1.0. Using 2.3.0 (July, 2020) for ORM compatibility
+    
     }
   }
 }
