@@ -98,8 +98,14 @@ resource "oci_core_instance" "mi_servidor" {
   compartment_id      = var.compartment_ocid
   display_name        = "Servidor-SimpleRAG"
   # Si usas la capa gratuita ARM, cambia esto a "VM.Standard.A1.Flex"
-  shape               = "VM.Standard.E2.1.Micro" 
+  shape               = "VM.Standard.A1.Flex" 
 
+  shape_config {
+        # En lugar de 4, pedimos lo mínimo viable
+        ocpus = 2
+        # En lugar de 24, pedimos 6GB (la relación suele ser 6GB por cada OCPU)
+        memory_in_gbs = 12
+    }
   create_vnic_details {
     subnet_id        = oci_core_subnet.mi_subnet.id
     assign_public_ip = true
