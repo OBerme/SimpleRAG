@@ -91,7 +91,7 @@ data "oci_identity_availability_domains" "ads" {
 # 6. EL SERVIDOR (INSTANCIA) - La máquina final
 # -----------------------------------------------------------------------
 resource "oci_core_instance" "mi_servidor" {
-  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
+  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[1].name
   compartment_id      = var.compartment_ocid
   display_name        = "Servidor-SimpleRAG"
   # Si usas la capa gratuita ARM, cambia esto a "VM.Standard.A1.Flex"
@@ -99,9 +99,9 @@ resource "oci_core_instance" "mi_servidor" {
 
   shape_config {
         # En lugar de 4, pedimos lo mínimo viable
-        ocpus = 2
+        ocpus = 1
         # En lugar de 24, pedimos 6GB (la relación suele ser 6GB por cada OCPU)
-        memory_in_gbs = 12
+        memory_in_gbs = 6
     }
   create_vnic_details {
     subnet_id        = oci_core_subnet.mi_subnet.id
