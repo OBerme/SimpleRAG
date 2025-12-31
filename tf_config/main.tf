@@ -91,7 +91,7 @@ data "oci_identity_availability_domains" "ads" {
 # 6. EL SERVIDOR (INSTANCIA) - La máquina final
 # -----------------------------------------------------------------------
 resource "oci_core_instance" "mi_servidor" {
-  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[1].name
+  availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name
   compartment_id      = var.compartment_ocid
   display_name        = "Servidor-SimpleRAG"
   # Si usas la capa gratuita ARM, cambia esto a "VM.Standard.A1.Flex"
