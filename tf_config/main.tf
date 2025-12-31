@@ -110,7 +110,8 @@ resource "oci_core_instance" "mi_servidor" {
 
   source_details {
     source_type = "image"
-    source_id   = data.oci_core_images.oracle_linux.images[0].id
+    # Aquí le decimos que coja el ID que ha encontrado el bloque 'data' de arriba
+    source_id   = data.oci_core_images.ubuntu_arm.images[0].id 
   }
 
   # -----------------------------------------------------------
