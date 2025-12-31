@@ -73,17 +73,14 @@ resource "oci_core_subnet" "mi_subnet" {
   security_list_ids = [oci_core_security_list.mi_firewall_app.id]
 }
 
-# -----------------------------------------------------------------------
-# 5. DATOS AUXILIARES (Buscar imagen Linux y Zona de Disponibilidad)
-# -----------------------------------------------------------------------
-data "oci_core_images" "oracle_linux" {
-  compartment_id   = var.compartment_ocid
-  operating_system = "Oracle Linux"
-  operating_system_version = "8"
-  # Si usas la capa gratuita ARM (Ampere), cambia esto a "VM.Standard.A1.Flex"
-  shape            = "VM.Standard.E2.1.Micro" 
-  sort_by          = "TIMECREATED"
-  sort_order       = "DESC"
+# Buscamos la imagen de Ubuntu 22.04 que sea compatible con tu forma ARM
+data "oci_core_images" "ubuntu_arm" {
+  compartment_id           = var.compartment_ocid # O tu OCID directo si no usas vars
+  operating_system         = "Canonical Ubuntu"
+  operating_system_version = "22.04"
+  shape                    = "VM.Standard.A1.Flex" # <--- ESTA ES LA CLAVE
+  sort_by                  = "TIMECREATED"
+  sort_order               = "DESC"
 }
 
 data "oci_identity_availability_domains" "ads" {
