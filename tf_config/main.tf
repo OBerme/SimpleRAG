@@ -124,28 +124,34 @@ resource "oci_core_instance" "mi_servidor" {
     # 2. SCRIPT DE INSTALACIÓN
     user_data = base64encode(<<-EOF
       #!/bin/bash
-      # Actualizar sistema e instalar Git
-      sudo dnf update -y
-      sudo dnf install -y git
-
-      # Instalar Docker
-      sudo dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
-      sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-      sudo systemctl enable --now docker
-
-      # Preparar carpetas
-      mkdir -p /home/opc/app
+      apt-get update -y
+      apt-get install -y git curl
       
-      # 3. CAMBIO OBLIGATORIO: PON AQUÍ LA URL DE TU GITHUB (Usuario correcto)
-      git clone https://github.com/OBerme/SimpleRAG.git /home/opc/app/SimpleRAG
-
-      # Permisos para el usuario opc
-      sudo usermod -aG docker opc
-      sudo chown -R opc:opc /home/opc/app
-
-      # Arrancar Docker Compose
-      cd /home/opc/app/SimpleRAG
-      # Esto tardará un rato porque tiene que construir (build) las imágenes
+      # 2. Instalar Docker y el plugin de Docker Compose desde los repos de Ubuntu
+      # (Es más fiable que añadir repos externos en un script desatendido)
+      apt-get install -y docker.io docker-compose-v2
+      
+      # 3. Arrancar Docker y configurarlo para que inicie siempre
+      systemctl enable --now docker
+      
+      # 4. Añadir el usuario 'ubuntu' al grupo docker para no necesitar sudo
+      usermod -aG docker ubuntu
+      
+      # 5. Preparar carpetas (Usamos /home/ubuntu, NO /home/opc)
+      mkdir -p /home/ubuntu/app
+      
+      # 6. Clonar tu repositorio
+      # Si el repo es público funcionará directo. Si es privado, necesitarás tokens.
+      git clone https://github.com/OBerme/SimpleRAG.git /home/ubuntu/app/SimpleRAG
+      
+      # 7. Asegurar permisos correctos (para que el usuario ubuntu sea el dueño)
+      chown -R ubuntu:ubuntu /home/ubuntu/app
+      
+      # 8. Desplegar
+      cd /home/ubuntu/app/SimpleRAG
+      
+      # Ejecutamos docker compose
+      # Nota: usamos la ruta completa del plugin por seguridad o el comando nuevo
       docker compose up -d --build
     EOF
     )
