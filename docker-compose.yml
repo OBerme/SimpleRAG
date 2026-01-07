@@ -23,7 +23,7 @@ services:
 
     env_file:
       # - ./backend/.env
-      - /home/oscarestud/.env
+      - ./backend/.env
       
 
     networks:
@@ -56,11 +56,33 @@ services:
     networks:
       - scraper-net
   
-  db-backend:
+  # db-backend:
+  #   # 1. Indicamos a Docker Compose que debe construir la imagen 
+  #   # usando el Dockerfile en el directorio actual.
+  #   build: 
+  #     context: ./backend/no_sql_db
+  #     dockerfile: Dockerfile
+    
+  #   # 2. Mapeamos el puerto interno del contenedor (8000) al puerto 
+  #   # de tu máquina local (8000) para poder acceder a la API.
+  #   ports:
+  #     - "8001:8001"
+      
+  #   # 3. Mapeamos el código local al contenedor. 
+  #   # Esto es ÚTIL PARA EL DESARROLLO (hot-reloading): 
+  #   # si cambias tu código Python, se reflejará automáticamente
+  #   # sin tener que reconstruir la imagen.
+  #   volumes:
+  #     - ./backend/db:/backend-db
+
+  #   # env_file:
+  #   #   - ./backend/db/.env
+
+  mongo-db-backend:
     # 1. Indicamos a Docker Compose que debe construir la imagen 
     # usando el Dockerfile en el directorio actual.
     build: 
-      context: ./backend/db
+      context: ./backend/no_sql_db
       dockerfile: Dockerfile
     
     # 2. Mapeamos el puerto interno del contenedor (8000) al puerto 
@@ -73,17 +95,26 @@ services:
     # si cambias tu código Python, se reflejará automáticamente
     # sin tener que reconstruir la imagen.
     volumes:
-      - ./backend/db:/backend-db
-
-    # env_file:
-    #   - ./backend/db/.env
-      
-
+      - ./backend/no_sql_db:/mongo-db-backend
+    env_file:
+      - ./backend/no_sql_db/.env
+    
     networks:
       - scraper-net
-    
-    # 5. Comando para reiniciar si falla (opcional)
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_ia
     restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: tu_password_seguro
+    env_file:
+      - ./backend/no_sql_db/.env.mongo
+    networks:
+      - scraper-net
 
 networks:
   scraper-net:

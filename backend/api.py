@@ -2,8 +2,8 @@ from fastapi import FastAPI
 
 from fileManager import FileManager
 # from GoogleGemini.googleGeminiFilesUploaderFinal import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
-# from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+# from OpenAIChatGPT.APIInterfaceCallable import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
+from OpenAIChatGPT.APIInterfaceCallableMockApp import getResponseUsingFiles, evaluar_documentos, obtener_contenidos_y_combinar
 # # from OpenAIChatGPT.APIInterfaceCallableFilesVersion import getResponseUsingFiles
 
 from OpenAIChatGPT.parser import get_json_model_response, get_list_links, get_list_response
@@ -32,7 +32,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://your-streamlit-app.streamlit.app"],
+    # allow_origins=["https://your-streamlit-app.streamlit.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

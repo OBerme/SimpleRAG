@@ -15,7 +15,8 @@ API_POINT_ENTRY_URL = f"{API_URL}/getResponseWithQuery"
 
 # URL de la nueva API para guardar conversaciones en MongoDB
 # Asumimos que correrá en el puerto 8001 localmente
-CONVERSATIONS_API_URL = "http://db-backend:8001"
+# CONVERSATIONS_API_URL = "http://db-backend:8001"
+CONVERSATIONS_API_URL = "http://mongo-db-backend:8001"
 
 
 def create_new_conversation(first_query, title):
@@ -29,8 +30,8 @@ def create_new_conversation(first_query, title):
         )
         if response.status_code == 200:
             return response.json()["conversation_id"]
-    except:
-        st.error("Error al registrar la nueva conversación en la base de datos.")
+    except Exception as e:
+        st.error("Error al registrar la nueva conversación en la base de datos.", e)
     return None
 
 def get_conversations():
@@ -155,25 +156,26 @@ if prompt := st.chat_input("¿En qué puedo ayudarte?"):
             else:
                 st.write(data['error']['message'])
                 
-        except Exception as e:
-            if DEBUG_MODE:
-                # Capturamos el error completo
-                error_detallado = traceback.format_exc()
+        # except Exception as e:
+        #     if DEBUG_MODE:
+        #         # Capturamos el error completo
+        #         error_detallado = traceback.format_exc()
                 
-                # Lo imprimimos en la consola/terminal para que tú lo veas
-                print(error_detallado)
+        #         # Lo imprimimos en la consola/terminal para que tú lo veas
+        #         print(error_detallado)
                 
-                # En Streamlit, puedes mostrarlo en un desplegable para que no ensucie la UI
-                with st.expander("Ver detalles del error"):
-                    st.code(error_detallado)
+        #         # En Streamlit, puedes mostrarlo en un desplegable para que no ensucie la UI
+        #         with st.expander("Ver detalles del error"):
+        #             st.code(error_detallado)
                 
-                message_placeholder.error(f"Error: {e}")
+        #         message_placeholder.error(f"Error: {e}")
                 
-            else:
-                message_placeholder.error(f"Error: {e}")
+        #     else:
+        #         message_placeholder.error(f"Error: {e}")
 # else:
-    # if "title" not in st.session_state or st.session_state.title is None:
-    #     st.title("🚀 Nueva Conversación")
+#     if "title" not in st.session_state or st.session_state.title is None:
+st.title("WEB EN MANTENIMIENTO!!!!!")
+st.write("Los resultados de la web están siendo testeados. Si quiere probar la versión definitiva escriba a Óscar Bermejo Domínguez https://teams.microsoft.com/l/chat/48:notes/conversations?context=%7B%22contextType%22%3A%22chat%22%7D")
 
 
     
