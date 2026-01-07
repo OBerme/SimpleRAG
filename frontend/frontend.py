@@ -126,7 +126,7 @@ if prompt := st.chat_input("¿En qué puedo ayudarte?"):
                 # links=["link 1", "link 2", "link 3"]
                 # title="nombre del chat"
                 
-                st.session_state.messages.append({"role": "assistant", "content": response})
+                # st.session_state.messages.append({"role": "assistant", "content": response}) # mostrar código de resultado
                 
                 
                 # # Formatear la respuesta final
